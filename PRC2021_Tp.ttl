@@ -1,0 +1,147 @@
+@prefix : <http://www.di.uminho.pt/prc2021/PRC2021_Tp#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@base <http://www.di.uminho.pt/prc2021/PRC2021_Tp#> .
+
+<http://www.di.uminho.pt/prc2021/PRC2021_Tp#> rdf:type owl:Ontology .
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  http://www.di.uminho.pt/prc2021/PRC2021_Tp#CriadaPor
+:CriadaPor rdf:type owl:ObjectProperty ;
+           owl:inverseOf :Criou .
+
+
+###  http://www.di.uminho.pt/prc2021/PRC2021_Tp#Criou
+:Criou rdf:type owl:ObjectProperty .
+
+
+###  http://www.di.uminho.pt/prc2021/PRC2021_Tp#GostaDe
+:GostaDe rdf:type owl:ObjectProperty ;
+         owl:inverseOf :éGostadoPor .
+
+
+###  http://www.di.uminho.pt/prc2021/PRC2021_Tp#RelativaA
+:RelativaA rdf:type owl:ObjectProperty .
+
+
+###  http://www.di.uminho.pt/prc2021/PRC2021_Tp#éGostadoPor
+:éGostadoPor rdf:type owl:ObjectProperty .
+
+
+#################################################################
+#    Data properties
+#################################################################
+
+###  http://www.di.uminho.pt/prc2021/PRC2021_Tp#data
+:data rdf:type owl:DatatypeProperty .
+
+
+###  http://www.di.uminho.pt/prc2021/PRC2021_Tp#descricao
+:descricao rdf:type owl:DatatypeProperty .
+
+
+###  http://www.di.uminho.pt/prc2021/PRC2021_Tp#dificuldade
+:dificuldade rdf:type owl:DatatypeProperty .
+
+
+###  http://www.di.uminho.pt/prc2021/PRC2021_Tp#email
+:email rdf:type owl:DatatypeProperty .
+
+
+###  http://www.di.uminho.pt/prc2021/PRC2021_Tp#ingrediente
+:ingrediente rdf:type owl:DatatypeProperty .
+
+
+###  http://www.di.uminho.pt/prc2021/PRC2021_Tp#nome
+:nome rdf:type owl:DatatypeProperty .
+
+
+###  http://www.di.uminho.pt/prc2021/PRC2021_Tp#password
+:password rdf:type owl:DatatypeProperty .
+
+
+###  http://www.di.uminho.pt/prc2021/PRC2021_Tp#titulo
+:titulo rdf:type owl:DatatypeProperty .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  http://www.di.uminho.pt/prc2021/PRC2021_Tp#Publicacao
+:Publicacao rdf:type owl:Class .
+
+
+###  http://www.di.uminho.pt/prc2021/PRC2021_Tp#Receita
+:Receita rdf:type owl:Class .
+
+
+###  http://www.di.uminho.pt/prc2021/PRC2021_Tp#Utilizador
+:Utilizador rdf:type owl:Class .
+
+
+#################################################################
+#    Individuals
+#################################################################
+
+###  http://www.di.uminho.pt/prc2021/PRC2021_Tp#Pub_1
+:Pub_1 rdf:type owl:NamedIndividual ,
+                :Publicacao ;
+       :CriadaPor <http://www.di.uminho.pt/prc2021/PRC2021_Tp#henriquesapessoa@gmail.com> ;
+       :RelativaA :Rec_1 ;
+       :data "17-06-2021" ;
+       :descricao """O verão chegou e é sinónimo de praia. Altura de férias, dar uns mergulhos, apanhar sol, descansar e fazer as refeições na areia.
+
+No entanto, com as idas à praia é possível que acabe com as marmitas cheias de sanduíches, hambúrgueres e batatas fritas. Por isso, o 24Kitchen selecionou várias receitas de saladas para poder fazer e levar para a praia. Incluímos receitas vegetarianas (V), sem glúten (SG) e vegans (VG) para que todos em casa possam comer e deliciarem-se.""" ;
+       :titulo "O bolo do consolo" .
+
+
+###  http://www.di.uminho.pt/prc2021/PRC2021_Tp#Rec_1
+:Rec_1 rdf:type owl:NamedIndividual ,
+                :Receita ;
+       :CriadaPor <http://www.di.uminho.pt/prc2021/PRC2021_Tp#henriquesapessoa@gmail.com> ;
+       :éGostadoPor <http://www.di.uminho.pt/prc2021/PRC2021_Tp#henriquesapessoa@gmail.com> ;
+       :data "17-06-2021" ;
+       :descricao """1. Numa taça, junte o açúcar mascavado escuro e a manteiga sem sal à temperatura ambiente e bata. Junte os ovos e incorpore com a batedeira.
+
+2. Junte a farinha e o fermento, com uma peneira, e incorpore.
+
+3. Corte a banana em pedacinho, junte á mistura do bolo e envolva.
+
+4. Unte uma forma com manteiga e papel vegetal. Coloque a mistura na forma, espalhe bem e bata a forma para assentar. Leve ao forno a 170ºC, durante 20 a 25 minutos.
+
+5. Num tacho, junte a o açúcar mascavado escuro, as natas, a manteiga e uma pitada de sal e ferva tudo junto, para fazer o caramelo.
+
+6. Retire o bolo do forno e deixe arrefecer um pouco. Desenforme o bolo ainda morno, faça alguns furos com uma faca e regue com o caramelo.""" ;
+       :dificuldade "Fácil" ;
+       :ingrediente "12gr de fermento" ,
+                    "170gr de manteiga sem sal" ,
+                    "180gr de açúcar mascavado escuro" ,
+                    "180gr de farinha" ,
+                    "2 ovos" ,
+                    "200gr de banana madura" ,
+                    "250ml natas" ,
+                    "280gr de açúcar de açúcar mascavado escuro" ,
+                    "65gr de manteiga" ,
+                    "Manteiga para untar" ,
+                    "Sal q.b." .
+
+
+###  http://www.di.uminho.pt/prc2021/PRC2021_Tp#henriquesapessoa@gmail.com
+<http://www.di.uminho.pt/prc2021/PRC2021_Tp#henriquesapessoa@gmail.com> rdf:type owl:NamedIndividual ,
+                                                                                 :Utilizador ;
+                                                                        :Criou :Pub_1 ,
+                                                                               :Rec_1 ;
+                                                                        :GostaDe :Rec_1 ;
+                                                                        :email "henriquesapessoa@gmail.com" ;
+                                                                        :nome "Henrique Sá Pessoa" ;
+                                                                        :password 123 .
+
+
+###  Generated by the OWL API (version 4.5.9.2019-02-01T07:24:44Z) https://github.com/owlcs/owlapi
