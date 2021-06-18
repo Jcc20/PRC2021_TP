@@ -6,6 +6,11 @@ Vue.use(VueRouter)
 
 const routes = [
   {
+    path: '/',
+    name: 'Home',
+    components: require("../components/Home.vue")
+  },
+  {
     path: '/login',
     name: 'Login',
     components: require("../components/Login.vue")
@@ -14,11 +19,8 @@ const routes = [
     path: '/registar',
     name: 'Registar',
     components: require("../components/Login.vue")
-  },
-  {
-    path: '/',
-    name: 'Recurso'
   }
+  
 ]
 
 const router = new VueRouter({

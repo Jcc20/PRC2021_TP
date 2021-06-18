@@ -7,6 +7,7 @@
           @click="goToLink('/')"
           class="logo"
           max-height="45"
+          style="cursor:pointer"
           max-width="490"
           src="../assets/mfc.png"
           ></v-img>
@@ -36,6 +37,7 @@
           <v-img
           @click="goToLink('/')"
           class="logo"
+          style="cursor:pointer"
           max-height="45"
           max-width="490"
           src="../assets/mfc.png"

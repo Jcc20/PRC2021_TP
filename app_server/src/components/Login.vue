@@ -132,7 +132,6 @@ import axios from 'axios'
                     required: value => !!value || "This camp is required.",
                     length: v => (v || '' ).length <= 20 || 'Username deverá conter 20 caracteres ou menos'
                 },
-                description: "",
                 username: "",
                 password: "",
                 passwordRegister: "",
@@ -141,8 +140,6 @@ import axios from 'axios'
                 emailRegister: "",
                 type: "password",
                 message:'',
-                tipo:"",
-                affiliation:"",
                 alert: false,
                 loading: false,
                 dialog: false,
@@ -170,7 +167,8 @@ import axios from 'axios'
                         this.dialog = false
                         this.loading = false
                     })
-                    .catch(() => {
+                    .catch(err => {
+                        console.log(err)
                         this.alert = true
                         this.message = 'Email ou Password incorretos!'
                         this.loading = false
@@ -182,15 +180,13 @@ import axios from 'axios'
                 json['name'] = this.username
                 json['email']    = this.emailRegister
                 json['password'] = this.passwordRegister
-                json['registerDate'] = new Date().toISOString();
-                json['description'] = this.description
-                json['type'] = this.tipo
-                json['affiliation'] = this.affiliation
+                json['data'] = new Date().toISOString();
                 axios.post("http://localhost:8081/api/user/register/", json)
                     .then( () => {
                         this.login()
                     })
-                    .catch(() => {
+                    .catch(err => {
+                        console.log(err)
                         this.alert = true
                         this.message = 'Email '+this.email+' já se encontra registado!'
                         this.loading = false
