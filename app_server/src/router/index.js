@@ -19,8 +19,22 @@ const routes = [
     path: '/registar',
     name: 'Registar',
     components: require("../components/Login.vue")
+  },
+  {
+    path: '/receitas',
+    name: 'Receitas',
+    components: require("../components/ReceitasSearch.vue")
+  },
+  {
+    path: '/publicacoes',
+    name: 'Publicacoes',
+    components: require("../components/Publicações.vue")
+  },
+  {
+    path: '/receitas/:id',
+    name: 'Receita',
+    components: require("../components/Receita.vue")
   }
-  
 ]
 
 const router = new VueRouter({

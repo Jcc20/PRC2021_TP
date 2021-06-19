@@ -42,7 +42,15 @@
           max-width="490"
           src="../assets/mfc.png"
           ></v-img>
-              <v-spacer></v-spacer>
+            <v-toolbar-items>
+             <v-btn class="navbar-button">
+                <span class="hyperlink" @click="goToLink('/publicacoes')"><b>Publicações</b></span>
+             </v-btn>
+             <v-btn class="navbar-button">
+                <span class="hyperlink" @click="goToLink('/receitas')"><b>Receitas</b></span>
+             </v-btn>
+            </v-toolbar-items>
+            <v-spacer></v-spacer>
             <v-toolbar-items>
              <v-btn class="navbar-button">
                 <Login/>
@@ -79,7 +87,7 @@ export default {
     return {
       idUser: null,
       dialog: false,
-      token: ''
+      token: localStorage.getItem('jwt')
     }
   },
   created() {
@@ -127,7 +135,7 @@ export default {
 }
 
 .logo{
-    margin-left: 10px;
+    margin-left: -10px;
     margin-right: 10px;
     margin-top: 10px;
 }

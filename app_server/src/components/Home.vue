@@ -1,18 +1,16 @@
 <template>
     <div id="home" class="home">
-
-     <v-container>
-      
+     <v-container> 
       <v-row no-gutters>
         <v-col cols="12" sm="6" md="8" class="publicacoes">
-          <h1>Receitas</h1>
+          <h1 @click="handleClick('/receitas')">Receitas</h1>
           <v-container class="pubs">
             <v-row no-gutters>
               <v-col v-for="n in list" :key="n.id" cols="12" sm="6">
-                <v-card class="pa-6 pub" outlined  @click="handleClick(n.id)">
+                <v-card class="pa-6 pub" outlined  @click="handleClick('/receitas/'+n.id)">
                   <v-row>
                     <v-col cols="12" sm="4" style="display:inline-flex">
-                        <v-img src="http://s2.glbimg.com/a9A4LreIIPbF0vrurZ2wotEndcI=/620x430/e.glbimg.com/og/ed/f/original/2017/11/17/thinkstockphotos-603906484.jpg"></v-img>
+                        <v-img src="../../public/default.png"></v-img>
                     </v-col>
                     <v-col cols="12" sm="8">
                         <span style="font-size: 20px; color: #53a6bf;"> {{ n.titulo }} <br/> </span>  
@@ -30,14 +28,14 @@
         </v-col>
 
         <v-col cols="6" md="4" class="recursos">
-            <h1>Novas Publicações</h1>
+            <h1 @click="handleClick('/publicacoes')">Novas Publicações</h1>
             <v-container class="recs">
             <v-row no-gutters>
               <v-col v-for="n in pubs" :key="n.id" cols="12" sm="12">
-                <v-card class="pa-6 rec" @click="handleClick2(n.id)">
+                <v-card class="pa-6 rec" @click="handleClick('/publicacoes')">
                   <v-row>
                     <v-col cols="12" sm="4" style="display:inline-flex">
-                        <v-img src="http://s2.glbimg.com/a9A4LreIIPbF0vrurZ2wotEndcI=/620x430/e.glbimg.com/og/ed/f/original/2017/11/17/thinkstockphotos-603906484.jpg"></v-img>
+                        <v-img src="../../public/default.png"></v-img>
                     </v-col>
                     <v-col cols="12" sm="8">
                         <span style="font-size: 20px; text-decoration: underline"> {{ n.titulo }} <br/> </span>
@@ -96,10 +94,7 @@ export default {
     },
     methods: {
         handleClick(value) {
-          this.$router.push('/receita/' + value)      
-        },
-        handleClick2(value) {
-          this.$router.push('/publicacao/' + value)      
+          this.$router.push(value)      
         },
         sorted(lista) {
             return lista.sort((a,b) => (a.data < b.data) ? 1 : ((b.data < a.data) ? -1 : 0))
