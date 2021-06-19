@@ -59,6 +59,54 @@ router.get('/', async function(req, res, next) {
     res.status(201).jsonp({receitas:arr})
 });
 
+router.get('/:id', async function(req, res, next) {
+    var id = '<http://www.di.uminho.pt/prc2021/PRC2021_Tp#'+req.params.id+'>'
+    var query = `select  ?d ?da ?di ?tc ?tp (GROUP_CONCAT(distinct ?ig;SEPARATOR="&") AS ?igs) ?t (GROUP_CONCAT(distinct ?g;SEPARATOR="&") AS ?gs) where {  ?s rdf:type :Receita.
+        ${id} :descricao ?d.
+        ${id} :data ?da.
+        ${id} :dificuldade ?di.
+        ${id} :ingrediente ?ig.
+   		${id} :titulo ?t.
+        ${id} :tipoCozinha ?tc.
+        ${id} :tipoPrato ?tp.
+        OPTIONAL {${id} :éGostadoPor ?g.}
+    } group by ?d ?da ?di ?t ?tc ?tp`
+           
+
+    console.log(query)
+    var result =await gdb.execQuery(query)
+    if(result.results.bindings[0]){
+
+        var arr = []
+
+        var ing=[]
+        result.results.bindings[0].igs.value.split('&').forEach(i=>{
+            ing.push(i)
+        })
+        var gostos = []
+        result.results.bindings[0].gs.value.split('&').forEach(g=>{
+           gostos.push(g.split('#')[1])
+        })
+        var obj = {
+            "rec_id": req.params.id,
+            "descricao": result.results.bindings[0].d.value,
+            "ingredientes": ing,
+            "titulo": result.results.bindings[0].t.value,
+            "dificuldade": result.results.bindings[0].di.value,
+            "gostos": gostos,
+            "data": result.results.bindings[0].da.value,
+            "tipoCozinha": result.results.bindings[0].tc.value,
+            "tipoPrato": result.results.bindings[0].tp.value
+        }
+        arr.push(obj)
+    
+        res.status(201).jsonp({receitas:arr})
+    }else{
+        res.status(404).jsonp({message:"Receita não existe!"})
+
+    }
+}); 
+
 router.get('/tiposCozinha', async function(req, res, next) {
     var query = `select distinct ?p where{ ?s :tipoCozinha ?p.}`
     var result =await gdb.execQuery(query)

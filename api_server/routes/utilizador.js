@@ -3,14 +3,7 @@ var router = express.Router();
 var jwt = require('jsonwebtoken')
 var gdb = require("../utils/graphdb");
 
-var prefixes = `
-    PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-    PREFIX owl: <http://www.w3.org/2002/07/owl#>
-    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-    PREFIX xml: <http://www.w3.org/XML/1998/namespace>
-    PREFIX : <http://www.di.uminho.pt/prc2021/PRC2021_Tp#> 
-`
+
 function verifyToken(token){  
   token = token.split(" ")[1] // Bearer ey341...
   var t = null;
@@ -33,7 +26,7 @@ router.post('/login' ,async function(req, res){
   try{
     var dados = await gdb.execQuery(query);
       
-    if(!dados.results.bindings[0]) { return res.status(500).jsonp({message:"Utilizador inexistente!\n"})}
+    if(!dados.results.bindings[0]) { return res.status(500).jsonp({message:"Email já registado!\n"})}
     if(req.body.password!=dados.results.bindings[0].p.value){
       return res.status(403).jsonp({message:"Credenciais inválidas!\n"})
     }
