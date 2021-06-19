@@ -116,19 +116,41 @@
                 :Publicacao ;
        :CriadaPor <http://www.di.uminho.pt/prc2021/PRC2021_Tp#henriquesapessoa@gmail.com> ;
        :RelativaA :Rec_1 ;
-       :data "17-06-2021" ;
+       :data "2021-06-18 19:20:13" ;
        :descricao """O verão chegou e é sinónimo de praia. Altura de férias, dar uns mergulhos, apanhar sol, descansar e fazer as refeições na areia.
 
-No entanto, com as idas à praia é possível que acabe com as marmitas cheias de sanduíches, hambúrgueres e batatas fritas. Por isso, o 24Kitchen selecionou várias receitas de saladas para poder fazer e levar para a praia. Incluímos receitas vegetarianas (V), sem glúten (SG) e vegans (VG) para que todos em casa possam comer e deliciarem-se.""" ;
+No entanto, com as idas à praia é possível que acabe com as marmitas cheias de sanduíches, hambúrgueres e batatas fritas. Por isso,  selecionei uma receita para poder fazer e levar para a praia.""" ;
        :titulo "O bolo do consolo" .
+
+
+###  http://www.di.uminho.pt/prc2021/PRC2021_Tp#Pub_2
+:Pub_2 rdf:type owl:NamedIndividual ,
+                :Publicacao ;
+       :CriadaPor <http://www.di.uminho.pt/prc2021/PRC2021_Tp#jcc@gmail.com> ;
+       :RelativaA :Rec_3 ;
+       :data "2021-08-22 14:25:00" ;
+       :descricao """O Dia da Mãe está a chegar! Aqui pode encontrar uma sugestão para mimar a sua.
+Mesmo que não possa estar com a sua mãe neste dia, experimente estas sugestões para surpreendê-la quando estiverem juntos... porque todos os dias, são dia da mãe!""" ;
+       :titulo "Para um Dia da Mãe Cheio de Sabor" .
+
+
+###  http://www.di.uminho.pt/prc2021/PRC2021_Tp#Pub_3
+:Pub_3 rdf:type owl:NamedIndividual ,
+                :Publicacao ;
+       :CriadaPor <http://www.di.uminho.pt/prc2021/PRC2021_Tp#luisramos@gmail.com> ;
+       :RelativaA :Rec_2 ;
+       :data "2021-02-21 10:00:17" ;
+       :descricao "O Carnaval está a chegar, o que significa que jantares temáticos com os seus amigos estão a chegar! No entanto, caso não tenha ideias, deixo aqui uma receita deliciosa para o seu menu de Carnaval." ;
+       :titulo "É Carnaval e Ninguém Leva a Mal.." .
 
 
 ###  http://www.di.uminho.pt/prc2021/PRC2021_Tp#Rec_1
 :Rec_1 rdf:type owl:NamedIndividual ,
                 :Receita ;
        :CriadaPor <http://www.di.uminho.pt/prc2021/PRC2021_Tp#henriquesapessoa@gmail.com> ;
-       :éGostadoPor <http://www.di.uminho.pt/prc2021/PRC2021_Tp#henriquesapessoa@gmail.com> ;
-       :data "17-06-2021" ;
+       :éGostadoPor <http://www.di.uminho.pt/prc2021/PRC2021_Tp#henriquesapessoa@gmail.com> ,
+                    <http://www.di.uminho.pt/prc2021/PRC2021_Tp#ric@gmail.com> ;
+       :data "2021-07-01 22:20:13" ;
        :descricao """1. Numa taça, junte o açúcar mascavado escuro e a manteiga sem sal à temperatura ambiente e bata. Junte os ovos e incorpore com a batedeira.
 
 2. Junte a farinha e o fermento, com uma peneira, e incorpore.
@@ -160,14 +182,62 @@ No entanto, com as idas à praia é possível que acabe com as marmitas cheias d
 ###  http://www.di.uminho.pt/prc2021/PRC2021_Tp#Rec_2
 :Rec_2 rdf:type owl:NamedIndividual ,
                 :Receita ;
-       :data "17-06-2021" ;
+       :CriadaPor <http://www.di.uminho.pt/prc2021/PRC2021_Tp#ric@gmail.com> ;
+       :éGostadoPor <http://www.di.uminho.pt/prc2021/PRC2021_Tp#jcc@gmail.com> ,
+                    <http://www.di.uminho.pt/prc2021/PRC2021_Tp#joanabarrios@gmail.com> ;
+       :data "2021-06-17 12:20:13" ;
        :descricao "Comece por descascar e cortar uma maça raineta em cubinhos. Leve a cozer em 2 chávenas de água. Aromatize com 1 pau de canela e uma casquinha de limão. Passados 2/3 minutos de levantar fervura, introduza 1 chávena de aveia e vá mexendo até a aveia estar cozida. Retire o pau de canela e a raspa de limão e depois, com a varinha mágica, triture muito rapidamente.Emprate as papas acompanhadas com passas e mel e temperadas com sal e uma pitada de sal, para realçar os sabores." ;
        :dificuldade "Média" ;
        :ingrediente "12gr de fermento" ,
                     "170gr de manteiga sem sal" ,
                     "180gr de açúcar mascavado escuro" ;
+       :tipoCozinha "Portuguesa" ;
+       :tipoPrato "Massa" ;
        :titulo "Papas de Aveia" ;
        :CriadoPor <http://www.di.uminho.pt/prc2021/PRC2021_Tp#ric@gmail.com> .
+
+
+###  http://www.di.uminho.pt/prc2021/PRC2021_Tp#Rec_3
+:Rec_3 rdf:type owl:NamedIndividual ,
+                :Receita ;
+       :CriadaPor <http://www.di.uminho.pt/prc2021/PRC2021_Tp#joanabarrios@gmail.com> ;
+       :éGostadoPor <http://www.di.uminho.pt/prc2021/PRC2021_Tp#jcc@gmail.com> ,
+                    <http://www.di.uminho.pt/prc2021/PRC2021_Tp#luisramos@gmail.com> ;
+       :data "2020-11-04 11:16:44" ;
+       :descricao """Massa de pizza: 
+
+Comece por dispor a farinha misturada com o sal numa taça funda ou num alguidar. 
+Dissolva o fermento na água e abra um buraco ao centro da farinha, para verter este preparado. Acrescente o azeite e comece a amassar até que a sua massa fique homogénea e se despegue facilmente das suas mãos. Amasse a massa durante cerca de 10 minutos sem parar. 
+Polvilhe uma outra taça com farinha e deposite a massa para descansar. Cubra a massa com um pano húmido e deixe-a descansar durante cerca de 2 horas. Quando usar a massa, lembre-se de enfarinhar muito bem a bancada onde a irá estender.
+Molho de tomate: 
+
+Pele o tomate e corte-o em pedaços pequenos. 
+Descasque os alhos e pique-os. 
+Deite num tacho o azeite e o alho para alourar. Introduza, depois, o tomate, o sal, o açúcar e o manjericão. 
+Tape o tacho e deixe cozinhar em lume muito brando durante cerca de 30 minutos, mexendo de vez em quando. 
+O tomate ficará praticamente desfeito; porém, se quiser, pode triturar tudo com a varinha mágica.
+Montagem da pizza: 
+
+Estenda bem a massa numa superfície enfarinhada, com o rolo da massa. 
+Cubra com molho de tomate e comece a montar a pizza. 
+Coloque mozzarella fresca, depois presunto, cogumelos paris laminados, mais um pouco de mozzarella fresca e termine com um ovo ao centro e umas folhas de manjericão. 
+Leve ao forno pré-aquecido a 200ºC durante cerca de 20 minutos.""" ;
+       :dificuldade "Média" ;
+       :ingrediente "1 ovo" ,
+                    "25 gr de fermento de padeiro fresco" ,
+                    "250 ml de água morna" ,
+                    "500 gr de farinha de trigo sem fermento" ,
+                    "6 colheres de sopa de azeite" ,
+                    "Calcule, para cada tomate, 2 dentes de alho, 1 colher de sopa de azeite, uma pitadinha de açúcar, 2 folhas de manjericão e sal q.b." ,
+                    "Cogumelos Paris q.b." ,
+                    "Manjericão q.b." ,
+                    "Mozzarella de búfala q.b." ,
+                    "Posto isto, é só fazer a quantidade de molho de tomate de que irá precisar e que pode, perfeitamente, guardar no frigorífico." ,
+                    "Presunto q.b." ,
+                    "Sal q.b." ;
+       :tipoCozinha "Italiana" ;
+       :tipoPrato "Pizza" ;
+       :titulo "Pizza caseira com Ovo" .
 
 
 ###  http://www.di.uminho.pt/prc2021/PRC2021_Tp#henriquesapessoa@gmail.com
@@ -184,9 +254,21 @@ No entanto, com as idas à praia é possível que acabe com as marmitas cheias d
 ###  http://www.di.uminho.pt/prc2021/PRC2021_Tp#jcc@gmail.com
 <http://www.di.uminho.pt/prc2021/PRC2021_Tp#jcc@gmail.com> rdf:type owl:NamedIndividual ,
                                                                     :Utilizador ;
+                                                           :GostaDe :Rec_2 ,
+                                                                    :Rec_3 ;
                                                            :email "jcc@gmail.com" ;
                                                            :nome "João Costa" ;
                                                            :password 123 .
+
+
+###  http://www.di.uminho.pt/prc2021/PRC2021_Tp#joanabarrios@gmail.com
+<http://www.di.uminho.pt/prc2021/PRC2021_Tp#joanabarrios@gmail.com> rdf:type owl:NamedIndividual ,
+                                                                             :Utilizador ;
+                                                                    :Criou :Rec_3 ;
+                                                                    :GostaDe :Rec_2 ;
+                                                                    :email "joanabarrios@gmail.com" ;
+                                                                    :nome "Joana Barrios" ;
+                                                                    :password 123 .
 
 
 ###  http://www.di.uminho.pt/prc2021/PRC2021_Tp#joaquimoliveira@gmail.com
@@ -198,7 +280,8 @@ No entanto, com as idas à praia é possível que acabe com as marmitas cheias d
 
 
 ###  http://www.di.uminho.pt/prc2021/PRC2021_Tp#joaquimpassos@gmail.com
-<http://www.di.uminho.pt/prc2021/PRC2021_Tp#joaquimpassos@gmail.com> rdf:type owl:NamedIndividual ;
+<http://www.di.uminho.pt/prc2021/PRC2021_Tp#joaquimpassos@gmail.com> rdf:type owl:NamedIndividual ,
+                                                                              :Utilizador ;
                                                                      :email "joaquimpassos@gmail.com" ;
                                                                      :nome "Joaquim Passos" ;
                                                                      :password "1234" .
@@ -207,6 +290,7 @@ No entanto, com as idas à praia é possível que acabe com as marmitas cheias d
 ###  http://www.di.uminho.pt/prc2021/PRC2021_Tp#luisramos@gmail.com
 <http://www.di.uminho.pt/prc2021/PRC2021_Tp#luisramos@gmail.com> rdf:type owl:NamedIndividual ,
                                                                           :Utilizador ;
+                                                                 :GostaDe :Rec_3 ;
                                                                  :email "luisramos@gmail.com" ;
                                                                  :nome "Luis Ramos" ;
                                                                  :password 123 .
@@ -216,6 +300,7 @@ No entanto, com as idas à praia é possível que acabe com as marmitas cheias d
 <http://www.di.uminho.pt/prc2021/PRC2021_Tp#ric@gmail.com> rdf:type owl:NamedIndividual ,
                                                                     :Utilizador ;
                                                            :Criou :Rec_2 ;
+                                                           :GostaDe :Rec_1 ;
                                                            :email "ric@gmail.com" ;
                                                            :nome "Ricardo Cunha" ;
                                                            :password 123 .
