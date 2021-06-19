@@ -65,7 +65,6 @@
 
 <script>
 import Login from "@/components/Login.vue"
-//import axios from 'axios'
 
 export default {
   name: "App",
@@ -89,23 +88,6 @@ export default {
       dialog: false,
       token: localStorage.getItem('jwt')
     }
-  },
-  created() {
-    /*
-    if (this.token) {
-      axios({
-          method: "post",
-          url: "http://localhost:8081/api/user/token/",
-          data: this.token,
-      })
-      .then(data => {
-          this.idUser = data.data.idUser
-          this.link = this.link + this.idUser
-      })
-      .catch(err => {
-          console.log(err)
-      })
-    }*/
   }
 };
 </script>

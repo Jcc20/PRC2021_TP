@@ -159,9 +159,9 @@ import axios from 'axios'
                 var json = {}
                 json['email'] = this.email
                 json['password'] = this.password
-                axios.post("http://localhost:8081/api/user/login/", json)
+                axios.post("http://localhost:7700/utilizador/login/", json)
                     .then(data => {
-                        console.log(data)
+                        console.log(data.data)
                         localStorage.setItem('jwt',data.data)
                         this.$router.go()
                         this.dialog = false
@@ -181,7 +181,7 @@ import axios from 'axios'
                 json['email']    = this.emailRegister
                 json['password'] = this.passwordRegister
                 json['data'] = new Date().toISOString();
-                axios.post("http://localhost:8081/api/user/register/", json)
+                axios.post("http://localhost:7700/utilizador/registar/", json)
                     .then( () => {
                         this.login()
                     })
