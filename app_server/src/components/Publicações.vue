@@ -2,27 +2,30 @@
   <div id="publicacoes" class="publicacoes">
   
     <v-container class="pa-0">
-      <v-row >
+      <v-row  no-gutters >
 
-        <v-col cols="2" >
-            <v-select
-            :items="items"
-            v-model="filter"
-            light
-            label="Filtro">
-            </v-select>
+        <v-col class="d-flex pa-2" cols="12" sm="3">
+            <v-text-field
+              v-model="tituloP"
+              label="Titulo da Publicação"
+              dense
+              outlined
+              hide-details
+            ></v-text-field>
         </v-col>
 
-        <v-col cols="2">
-            <v-text-field 
-            type="text" 
-            v-model="word" 
-            label="Palavra">
-            </v-text-field>        
+        <v-col class="d-flex pa-2" cols="12" sm="3">
+            <v-text-field
+              v-model="tituloR"
+              label="Titulo da Receita"
+              dense
+              outlined
+              hide-details
+            ></v-text-field>
         </v-col>
 
-        <v-col cols="2">
-            <v-btn style="margin-top:10px" @click="search()"> 
+        <v-col class="d-flex pa-2" cols="12" sm="2">
+            <v-btn  @click="search()"> 
               Procurar
               <v-icon> mdi-magnify </v-icon>
             </v-btn>        
@@ -69,8 +72,8 @@ export default {
     name: 'publicacoes',
     data() {
         return { 
-            filter: null,
-            word: null,
+            tituloR: '',
+            tituloP: '',
             list: [],
             pubs: [],
             items: ["titulo","receita"]
@@ -92,6 +95,7 @@ export default {
             return lista.sort((a,b) => (a.data < b.data) ? 1 : ((b.data < a.data) ? -1 : 0))
         },
         search() {
+            if (this.$route.query.receita) console.log("id: " + this.$route.query.receita)
             console.log("filtro: " + this.filter)
             console.log("word: " + this.word)
         },

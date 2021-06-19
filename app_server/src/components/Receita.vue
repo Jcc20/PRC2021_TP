@@ -1,6 +1,6 @@
 <template>
     <div id="receita" class="receita">
-        <v-container> 
+        <v-container v-if="receita"> 
             <v-row>
                 <v-col>
                     <v-img max-height="600px" src="../../public/default.png"></v-img>
@@ -9,18 +9,18 @@
             <v-row align="center" >
                 <v-col>
                     <h1 style="color:#57a2bf"> {{ receita.titulo }} </h1> 
-                    <span> <b>Autor:</b> {{receita.creator}} </span>
+                    <span> <b>Autor:</b> {{receita.autor}} </span>
                 </v-col>
 
                 <v-col sm="1" align="right">
                     <v-row align="center">
                         <div v-if="token">
-                            <div v-if="receita.gostos.includes(receita.id)">
-                                <v-icon @click="dislike(receita.id)" x-large color="red">mdi-cards-heart</v-icon>
+                            <div v-if="receita.gostos.includes(receita.autor_id)">
+                                <v-icon @click="dislike(receita.rec_id)" x-large color="red">mdi-cards-heart</v-icon>
                                 <span style="margin-left:5px; font-size:20px"> {{ receita.gostos.length }} </span>
                             </div>
                             <div v-else>
-                                <v-icon @click="like(receita.id)" x-large color="grey">mdi-cards-heart</v-icon>
+                                <v-icon @click="like(receita.autor_id)" x-large color="grey">mdi-cards-heart</v-icon>
                                 <span style="margin-left:5px; font-size:20px"> {{ receita.gostos.length }} </span>
                             </div>
                         </div>
@@ -45,8 +45,22 @@
             </v-card>
 
             <v-row>
-               <v-col>
-                   <span> Dificuldade: {{receita.dificuldade}} </span>
+               <v-col cols="8">
+                   <span> <b> Dificuldade:</b>  
+                        <span v-if="receita.dificuldade=='Fácil'" style="color:green"> {{receita.dificuldade}} </span>
+                        <span  v-else-if="receita.dificuldade=='Média'" style="color:orange"> {{receita.dificuldade}} </span>
+                        <span v-else style="color:red"> {{receita.dificuldade}} </span>
+                   </span>
+                   <span style="margin-right:10px;margin-left:10px">|</span>
+                   <span> <b> Tipo de cozinha:</b> {{receita.tipoCozinha}} </span>
+                   <span style="margin-right:10px;margin-left:10px">|</span>
+                   <span> <b> Tipo de prato:</b> {{receita.tipoPrato}} </span>
+                   
+               </v-col>
+               <v-col  align="right">
+                   <v-btn elevation="4" @click="handleClick('/publicacoes?receita=' + receita.rec_id)">
+                        Ver publicacoes
+                    </v-btn>
                </v-col>
             </v-row>
 
@@ -67,8 +81,8 @@
                             <h3> Ingredientes: </h3>
                         </v-card-title>
                         <v-card-text>
-                            <v-list v-for="i in receita.ingredientes" :key="i">
-                                <v-list-item  style="font-size:18px">
+                            <v-list v-for="i in receita.ingredientes" :key="i" style="padding:0px;margin:0px;">
+                                <v-list-item dense style="padding:0px;margin:0px;font-size:18px">
                                   <v-icon color="#57a2bf"> mdi-check </v-icon>
                                   {{i}}
                                 </v-list-item>
@@ -78,6 +92,11 @@
                     </v-card>
                 </v-col>
             </v-row>
+            
+            <!--
+            <v-btn elevation="4" @click="handleClick('/publicacoes?receita=' + receita.rec_id)">
+                Ver publicacoes
+            </v-btn>-->
 
             <v-card style="margin-top:20px;margin-bottom:20px" color="#57a2bf" height="2px">
                 <v-card-title >
@@ -86,7 +105,7 @@
 
             <v-row >
               <v-col cols="12" align="center" justify="center"> 
-                <p v-if="token" style="font-size:18px"> Adiciona uma publicação sobre a receita!</p>
+                <p v-if="token" style="font-size:18px"> Adiciona uma publicação sobre a receita! </p>
                 <p v-else style="font-size:18px"> Efetua login para poderes adicionar publicações!</p>
                 <v-row>  
                     <v-col align="center" > 
@@ -109,7 +128,7 @@
                              :disabled="token?false:true"
                              hide-details
                              v-model="pub"
-                             placeholder="Escreve um comentário"
+                             placeholder="Descrição"
                              prepend-icon="mdi-drag-vertical-variant"        
                            ></v-text-field>
                             <v-btn :disabled="token?false:true" @click="submitPub()" style="margin-right:-10px">
@@ -127,30 +146,28 @@
 
 
 <script>
-//import axios from 'axios'
+import axios from 'axios'
 
 export default {
     name: 'receita',
     data() {
         return { 
             receita: null,
-            token: 'a',
+            token: localStorage.getItem('jwt'),
             pub:'',
             titulo:'',
             alerta: false,
         }
     },
     created() {                 
-        this.receita = {
-            id:"rec_6",
-            titulo:"Bolo de banana", 
-            dificuldade: "Média", 
-            creator:"joao", 
-            gostos: ["joaquim"] ,
-            data:"2021-04-02 21:30:01", 
-            descricao:"Numa taça, junte o açúcar mascavado escuro e a manteiga sem sal à temperatura ambiente e bata. Junte os ovos e incorpore com a batedeira. Junte a farinha e o fermento, com uma peneira, e incorpore. Corte a banana em pedacinho, junte á mistura do bolo e envolva.", 
-            ingredientes:["pao","1kg de arroz","250g de massa"]
-        }
+        axios.get("http://localhost:7700/receita/"+this.$route.params.id)
+            .then(data => {
+                this.receita = data.data.receita
+                this.receita.data = "2021-04-02 21:30:01"
+            })
+            .catch(err => {
+                console.log(err)
+            })                 
     },
     methods: {
         handleClick(value) {

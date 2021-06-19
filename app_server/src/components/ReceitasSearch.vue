@@ -80,7 +80,11 @@
                                 <v-col cols="12" sm="10">
                                     <span style="font-size: 20px; color: #53a6bf;"> {{ n.titulo }} <br/> </span>  
                                     <span > <b>Autor: </b>{{ n.creator }} <br/></span>
-                                    <span > <b>Dificuldade: </b>{{ n.dificuldade }} <br/><br/></span>
+                                    <span > <b>Dificuldade: </b>
+                                        <span v-if="n.dificuldade=='Fácil'" style="color:green"> {{n.dificuldade}} </span>
+                                        <span  v-else-if="n.dificuldade=='Média'" style="color:orange"> {{n.dificuldade}} </span>
+                                        <span v-else style="color:red"> {{n.dificuldade}} </span><br/><br/>
+                                    </span>
                                     <span> <i> Adicionada {{ n.data | moment("from") }} </i> </span>
                                 </v-col>
                                 <v-col align="right" sm="2">
@@ -155,12 +159,12 @@ export default {
                     console.log(err)
                 })                 
         this.recs = [
-            {id:"rec_1",titulo:"Bolo de chocolate", dificuldade: "Fácil", creator:"henrique", gostos: ["joaquim","joao"] ,  data:"2021-01-10 23:59:59", descricao:"1. Numa taça, junte o açúcar mascavado escuro e a manteiga sem sal à temperatura ambiente e bata. Junte os ovos e incorpore com a batedeira.\n2. Junte a farinha e o fermento, com uma peneira, e incorpore.\n3. Corte a banana em pedacinho, junte á mistura do bolo e envolva.", ingredientes:[]},
-            {id:"rec_2",titulo:"Bolo de ananás", dificuldade: "Média", creator:"joao", gostos: ["joaquim"] ,data:"2021-01-02 21:30:01",  descricao:"1. Numa taça, junte o açúcar mascavado escuro e a manteiga sem sal à temperatura ambiente e bata. Junte os ovos e incorpore com a batedeira.\n2. Junte a farinha e o fermento, com uma peneira, e incorpore.\n3. Corte a banana em pedacinho, junte á mistura do bolo e envolva.", ingredientes:["pao"]},
-            {id:"rec_3",titulo:"Bolo de feijão", dificuldade: "Fácil", creator:"ricardo", gostos: [] , data:"2021-02-01 13:23:23", descricao:"1. Numa taça, junte o açúcar mascavado escuro e a manteiga sem sal à temperatura ambiente e bata. Junte os ovos e incorpore com a batedeira.\n2. Junte a farinha e o fermento, com uma peneira, e incorpore.\n3. Corte a banana em pedacinho, junte á mistura do bolo e envolva.", ingredientes:["bacalhua","pimento","chouriça","sal","pimenta","gelado"]},
-            {id:"rec_4",titulo:"Bolo de queijo", dificuldade: "Difícil", creator:"henrique", gostos: ["joaquim","joao","joana"] , data:"2021-02-26 17:21:27", descricao:"1. Numa taça, junte o açúcar mascavado escuro e a manteiga sem sal à temperatura ambiente e bata. Junte os ovos e incorpore com a batedeira.\n2. Junte a farinha e o fermento, com uma peneira, e incorpore.\n3. Corte a banana em pedacinho, junte á mistura do bolo e envolva.", ingredientes:["feijoada","uma colher de sal","250g de farinha"]},
-            {id:"rec_5",titulo:"Bolo de abacaxi", dificuldade: "Fácil", creator:"joaquim", gostos: ["joaquim","joao"] ,  data:"2021-02-12 23:59:59", descricao:"1. Numa taça, junte o açúcar mascavado escuro e a manteiga sem sal à temperatura ambiente e bata. Junte os ovos e incorpore com a batedeira.\n2. Junte a farinha e o fermento, com uma peneira, e incorpore.\n3. Corte a banana em pedacinho, junte á mistura do bolo e envolva.", ingredientes:[]},
-            {id:"rec_6",titulo:"Bolo de banana", dificuldade: "Média", creator:"joao", gostos: ["joaquim"] ,data:"2021-04-02 21:30:01",  descricao:"1. Numa taça, junte o açúcar mascavado escuro e a manteiga sem sal à temperatura ambiente e bata. Junte os ovos e incorpore com a batedeira.\n2. Junte a farinha e o fermento, com uma peneira, e incorpore.\n3. Corte a banana em pedacinho, junte á mistura do bolo e envolva.", ingredientes:["pao"]}
+            {id:"Rec_1",titulo:"Bolo de chocolate", dificuldade: "Fácil", creator:"henrique", gostos: ["joaquim","joao"] ,  data:"2021-01-10 23:59:59", descricao:"1. Numa taça, junte o açúcar mascavado escuro e a manteiga sem sal à temperatura ambiente e bata. Junte os ovos e incorpore com a batedeira.\n2. Junte a farinha e o fermento, com uma peneira, e incorpore.\n3. Corte a banana em pedacinho, junte á mistura do bolo e envolva.", ingredientes:[]},
+            {id:"Rec_2",titulo:"Bolo de ananás", dificuldade: "Média", creator:"joao", gostos: ["joaquim"] ,data:"2021-01-02 21:30:01",  descricao:"1. Numa taça, junte o açúcar mascavado escuro e a manteiga sem sal à temperatura ambiente e bata. Junte os ovos e incorpore com a batedeira.\n2. Junte a farinha e o fermento, com uma peneira, e incorpore.\n3. Corte a banana em pedacinho, junte á mistura do bolo e envolva.", ingredientes:["pao"]},
+            {id:"Rec_3",titulo:"Bolo de feijão", dificuldade: "Fácil", creator:"ricardo", gostos: [] , data:"2021-02-01 13:23:23", descricao:"1. Numa taça, junte o açúcar mascavado escuro e a manteiga sem sal à temperatura ambiente e bata. Junte os ovos e incorpore com a batedeira.\n2. Junte a farinha e o fermento, com uma peneira, e incorpore.\n3. Corte a banana em pedacinho, junte á mistura do bolo e envolva.", ingredientes:["bacalhua","pimento","chouriça","sal","pimenta","gelado"]},
+            {id:"Rec_4",titulo:"Bolo de queijo", dificuldade: "Difícil", creator:"henrique", gostos: ["joaquim","joao","joana"] , data:"2021-02-26 17:21:27", descricao:"1. Numa taça, junte o açúcar mascavado escuro e a manteiga sem sal à temperatura ambiente e bata. Junte os ovos e incorpore com a batedeira.\n2. Junte a farinha e o fermento, com uma peneira, e incorpore.\n3. Corte a banana em pedacinho, junte á mistura do bolo e envolva.", ingredientes:["feijoada","uma colher de sal","250g de farinha"]},
+            {id:"Rec_5",titulo:"Bolo de abacaxi", dificuldade: "Fácil", creator:"joaquim", gostos: ["joaquim","joao"] ,  data:"2021-02-12 23:59:59", descricao:"1. Numa taça, junte o açúcar mascavado escuro e a manteiga sem sal à temperatura ambiente e bata. Junte os ovos e incorpore com a batedeira.\n2. Junte a farinha e o fermento, com uma peneira, e incorpore.\n3. Corte a banana em pedacinho, junte á mistura do bolo e envolva.", ingredientes:[]},
+            {id:"Rec_6",titulo:"Bolo de banana", dificuldade: "Média", creator:"joao", gostos: ["joaquim"] ,data:"2021-04-02 21:30:01",  descricao:"1. Numa taça, junte o açúcar mascavado escuro e a manteiga sem sal à temperatura ambiente e bata. Junte os ovos e incorpore com a batedeira.\n2. Junte a farinha e o fermento, com uma peneira, e incorpore.\n3. Corte a banana em pedacinho, junte á mistura do bolo e envolva.", ingredientes:["pao"]}
         ]          
         this.list = this.sorted(this.recs)
     },
@@ -180,7 +184,6 @@ export default {
             if (this.ingrediente) query+= (query==''?'':'&') + "ingrediente=" + this.ingrediente
             axios.get("http://localhost:7700/receita?"+query)
                 .then(data => {
-                    console.log(data.data)
                     this.list = this.sorted(data.data.receitas)
                 })
                 .catch(err => {
@@ -188,7 +191,13 @@ export default {
                 })
         },
         searchAll(){
-            console.log("procurar todos")
+            axios.get("http://localhost:7700/receita/")
+                .then(data => {
+                    this.list = this.sorted(data.data.receitas)
+                })
+                .catch(err => {
+                    console.log(err)
+                })
         }
     }
 }

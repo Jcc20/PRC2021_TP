@@ -22,9 +22,6 @@
             <v-spacer></v-spacer>
             <v-toolbar-items>
              <v-btn class="navbar-button">
-                <span class="hyperlink" @click="goToLink('/perfil')"><b>Perfil</b></span>
-             </v-btn>
-             <v-btn class="navbar-button">
                 <span @click="handleLogout()"> <b> Logout </b></span>
              </v-btn>
             </v-toolbar-items>
