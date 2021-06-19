@@ -18,6 +18,50 @@ function verifyToken(token){
   return t
 }
 
+
+router.get('/', async function(req, res, next) {
+    var query = `select   ?s ?d ?da ?t ?tr ?a ?n where {  ?s rdf:type :Publicacao.
+        ?s :RelativaA ?r.
+        ?s :descricao ?d.
+        ?s :data ?da.
+   		?s :titulo ?t.
+        ?r  :titulo ?tr.
+   		?s :CriadaPor ?a.
+        ?a :nome ?n.
+       
+       `
+           
+    if(req.query.tituloP){
+        query+=`\nFILTER regex (str(?t), "${req.query.tituloP}", "i").`
+    }else if(req.query.tituloR){
+        query+=`\nFILTER regex (str(?tr), "${req.query.tituloR}", "i").`
+    }
+    query+="}"
+    console.log(query)
+    var result =await gdb.execQuery(query)
+
+    var arr = []
+    if(result.results.bindings[0]){
+        result.results.bindings.forEach(a => {
+            var obj = {
+                "pub_id": a.s.value.split('#')[1],
+                "descricao": a.d.value,
+                "titulo": a.t.value,
+                "data": a.da.value,
+                "titulo_receita": a.tr.value,
+                "autor_id": a.a.value.split('#')[1],
+                "autor": a.n.value
+            }      
+            arr.push(obj)
+        });   
+        res.status(201).jsonp({publis:arr})
+    }else{
+        res.status(404).jsonp({message:"Não existem publicações!"})
+
+    }
+    
+});
+
 router.get('/receita/:id', async function(req, res, next) {
     var query = `select   ?s ?d ?da ?t ?tr ?a ?n where {  ?s rdf:type :Publicacao.
         ?s :RelativaA :${req.params.id}.
