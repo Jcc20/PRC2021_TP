@@ -3,7 +3,7 @@ var router = express.Router();
 var gdb = require("../utils/graphdb");
 
 router.get('/', async function(req, res, next) {
-    var query = `select  ?s ?d ?da ?di ?tc ?tp (GROUP_CONCAT(distinct ?ig;SEPARATOR="&") AS ?igs) ?t (GROUP_CONCAT(distinct ?g;SEPARATOR="&") AS ?gs) where {  ?s rdf:type :Receita.
+    var query = `select  ?s ?d ?da ?di ?tc ?tp ?n (GROUP_CONCAT(distinct ?ig;SEPARATOR="&") AS ?igs) ?t (GROUP_CONCAT(distinct ?g;SEPARATOR="&") AS ?gs) where {  ?s rdf:type :Receita.
         ?s :descricao ?d.
         ?s :data ?da.
         ?s :dificuldade ?di.
@@ -11,6 +11,9 @@ router.get('/', async function(req, res, next) {
    		?s :titulo ?t.
         ?s :tipoCozinha ?tc.
         ?s :tipoPrato ?tp.
+        ?s :CriadaPor ?a.
+        ?a :nome ?n.
+        
         OPTIONAL {?s :éGostadoPor ?g.}`
            
     if(req.query.titulo){
@@ -28,7 +31,7 @@ router.get('/', async function(req, res, next) {
         query+=`\n?s :CriadaPor ?c.
     	?c :nome "${req.query.autor}".`
     }
-    query+="} group by ?s ?d ?da ?di ?t ?tc ?tp"
+    query+="} group by ?s ?d ?da ?di ?t ?tc ?tp ?n"
     console.log(query)
     var result =await gdb.execQuery(query)
 
@@ -52,7 +55,8 @@ router.get('/', async function(req, res, next) {
             "gostos": gostos,
             "data": a.da.value,
             "tipoCozinha": a.tc.value,
-            "tipoPrato": a.tp.value
+            "tipoPrato": a.tp.value,
+            "autor": a.n.value
         }
         arr.push(obj)
     });
@@ -98,7 +102,7 @@ router.get('/autores', async function(req, res, next) {
 
 router.get('/:id', async function(req, res, next) {
     var id = '<http://www.di.uminho.pt/prc2021/PRC2021_Tp#'+req.params.id+'>'
-    var query = `select  ?d ?da ?di ?tc ?tp (GROUP_CONCAT(distinct ?ig;SEPARATOR="&") AS ?igs) ?t (GROUP_CONCAT(distinct ?g;SEPARATOR="&") AS ?gs) where {  ?s rdf:type :Receita.
+    var query = `select  ?d ?da ?di ?tc ?tp ?a ?n (GROUP_CONCAT(distinct ?ig;SEPARATOR="&") AS ?igs) ?t (GROUP_CONCAT(distinct ?g;SEPARATOR="&") AS ?gs) where {  ?s rdf:type :Receita.
         ${id} :descricao ?d.
         ${id} :data ?da.
         ${id} :dificuldade ?di.
@@ -106,8 +110,10 @@ router.get('/:id', async function(req, res, next) {
    		${id} :titulo ?t.
         ${id} :tipoCozinha ?tc.
         ${id} :tipoPrato ?tp.
+        ${id} :CriadaPor ?a.
+        ?a :nome ?n.
         OPTIONAL {${id} :éGostadoPor ?g.}
-    } group by ?d ?da ?di ?t ?tc ?tp`
+    } group by ?d ?da ?di ?t ?tc ?tp ?a ?n`
            
 
     console.log(query)
@@ -132,7 +138,9 @@ router.get('/:id', async function(req, res, next) {
             "gostos": gostos,
             "data": result.results.bindings[0].da.value,
             "tipoCozinha": result.results.bindings[0].tc.value,
-            "tipoPrato": result.results.bindings[0].tp.value
+            "tipoPrato": result.results.bindings[0].tp.value,
+            "autor": result.results.bindings[0].n.value,
+            "autor_id": result.results.bindings[0].a.value.split('#')[1],
         }
         
     
