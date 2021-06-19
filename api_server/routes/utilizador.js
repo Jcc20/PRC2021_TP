@@ -25,7 +25,8 @@ function verifyToken(token){
   return t
 }
 
-router.get('/login' ,async function(req, res){
+router.post('/login' ,async function(req, res){
+  console.log(req.body)
   var query = `SELECT * WHERE {	<http://www.di.uminho.pt/prc2021/PRC2021_Tp#${req.body.email}> :password ?p. 
   <http://www.di.uminho.pt/prc2021/PRC2021_Tp#${req.body.email}> :nome ?n.} `;
 

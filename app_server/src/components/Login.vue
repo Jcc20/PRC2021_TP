@@ -162,13 +162,13 @@ import axios from 'axios'
                 axios.post("http://localhost:7700/utilizador/login/", json)
                     .then(data => {
                         console.log(data.data)
-                        localStorage.setItem('jwt',data.data)
+                        localStorage.setItem('jwt',data.data.token)
                         this.$router.go()
                         this.dialog = false
                         this.loading = false
                     })
                     .catch(err => {
-                        console.log(err)
+                        console.log(err.message)
                         this.alert = true
                         this.message = 'Email ou Password incorretos!'
                         this.loading = false
