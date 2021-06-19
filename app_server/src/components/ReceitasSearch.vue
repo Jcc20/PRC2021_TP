@@ -14,7 +14,6 @@
 
                 <v-col class="d-flex pa-2" cols="12" sm="2">
                     <v-text-field
-                      :items="items"
                       v-model="ingrediente"
                       label="Ingrediente"
                       dense
@@ -25,7 +24,7 @@
 
                 <v-col class="d-flex pa-2" cols="12" sm="2">
                     <v-select
-                      :items="items"
+                      :items="tiposCozinha"
                       v-model="tipoCozinha"
                       label="Tipo de cozinha"
                       dense
@@ -37,7 +36,7 @@
 
                 <v-col class="d-flex pa-2" cols="12" sm="2">
                     <v-select
-                      :items="items"
+                      :items="tiposPrato"
                       v-model="tipoPrato"
                       label="Tipo de prato"
                       dense
@@ -49,7 +48,7 @@
 
                 <v-col class="d-flex pa-2" cols="12" sm="2">
                     <v-select
-                      :items="items"
+                      :items="chefs"
                       v-model="chef"
                       label="Chef"
                       dense
@@ -112,7 +111,7 @@
 
 
 <script>
-//import axios from 'axios'
+import axios from 'axios'
 
 export default {
     name: 'receitasSearch',
@@ -125,10 +124,36 @@ export default {
             ingrediente: null,
             list: [],
             recs: [],
-            items: ["a","b","c","d","w","e"]
+            tiposCozinha: [],
+            tiposPrato: [],
+            chefs: []
         }
     },
-    created() {                 
+    created() {
+        axios.get("http://localhost:7700/receita/tiposCozinha")
+                .then(data => {
+                    console.log(data.data)
+                    this.tiposCozinha = data.data.tipos
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        axios.get("http://localhost:7700/receita/tiposPrato")
+                .then(data => {
+                    console.log(data.data)
+                    this.tiposPrato = data.data.tipos
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        axios.get("http://localhost:7700/receita/autores")
+                .then(data => {
+                    console.log(data.data)
+                    this.chefs = data.data.tipos
+                })
+                .catch(err => {
+                    console.log(err)
+                })                 
         this.recs = [
             {id:"rec_1",titulo:"Bolo de chocolate", dificuldade: "Fácil", creator:"henrique", gostos: ["joaquim","joao"] ,  data:"2021-01-10 23:59:59", descricao:"1. Numa taça, junte o açúcar mascavado escuro e a manteiga sem sal à temperatura ambiente e bata. Junte os ovos e incorpore com a batedeira.\n2. Junte a farinha e o fermento, com uma peneira, e incorpore.\n3. Corte a banana em pedacinho, junte á mistura do bolo e envolva.", ingredientes:[]},
             {id:"rec_2",titulo:"Bolo de ananás", dificuldade: "Média", creator:"joao", gostos: ["joaquim"] ,data:"2021-01-02 21:30:01",  descricao:"1. Numa taça, junte o açúcar mascavado escuro e a manteiga sem sal à temperatura ambiente e bata. Junte os ovos e incorpore com a batedeira.\n2. Junte a farinha e o fermento, com uma peneira, e incorpore.\n3. Corte a banana em pedacinho, junte á mistura do bolo e envolva.", ingredientes:["pao"]},
@@ -147,11 +172,20 @@ export default {
             return lista.sort((a,b) => (a.data < b.data) ? 1 : ((b.data < a.data) ? -1 : 0))
         },
         search() {
-            console.log("tipo de cozinha: " + this.tipoCozinha)
-            console.log("tipo de prato: " + this.tipoPrato)
-            console.log("chef: " + this.chef)
-            console.log("ingrediente: " + this.ingrediente)
-            console.log("titulo: " + this.titulo)
+            var query = ''
+            if (this.tipoCozinha) query+= (query==''?'':'&') + "tipoCozinha=" + this.tipoCozinha
+            if (this.tipoPrato) query+= (query==''?'':'&') + "tipoPrato=" + this.tipoPrato
+            if (this.chef) query+= (query==''?'':'&') + "autor=" + this.chef
+            if (this.titulo) query+= (query==''?'':'&') + "titulo=" + this.titulo
+            if (this.ingrediente) query+= (query==''?'':'&') + "ingrediente=" + this.ingrediente
+            axios.get("http://localhost:7700/receita?"+query)
+                .then(data => {
+                    console.log(data.data)
+                    this.list = this.sorted(data.data.receitas)
+                })
+                .catch(err => {
+                    console.log(err)
+                })
         },
         searchAll(){
             console.log("procurar todos")

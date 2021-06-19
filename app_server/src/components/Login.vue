@@ -154,25 +154,26 @@ import axios from 'axios'
             }
         },  
         methods: {
-            login() {
-                this.loading = true
-                var json = {}
-                json['email'] = this.email
-                json['password'] = this.password
+            postLogin(json) {
                 axios.post("http://localhost:7700/utilizador/login/", json)
                     .then(data => {
-                        console.log(data.data)
                         localStorage.setItem('jwt',data.data.token)
                         this.$router.go()
                         this.dialog = false
                         this.loading = false
                     })
                     .catch(err => {
-                        console.log(err.message)
                         this.alert = true
-                        this.message = 'Email ou Password incorretos!'
+                        this.message = err.response.data.message
                         this.loading = false
                     })
+            },
+            login() {
+                this.loading = true
+                var json = {}
+                json['email'] = this.email
+                json['password'] = this.password
+                this.postLogin(json) 
             },
             register() {
                 this.loading=true
@@ -180,15 +181,13 @@ import axios from 'axios'
                 json['name'] = this.username
                 json['email']    = this.emailRegister
                 json['password'] = this.passwordRegister
-                json['data'] = new Date().toISOString();
                 axios.post("http://localhost:7700/utilizador/registar/", json)
                     .then( () => {
-                        this.login()
+                        this.postLogin(json) 
                     })
                     .catch(err => {
-                        console.log(err)
                         this.alert = true
-                        this.message = 'Email '+this.email+' já se encontra registado!'
+                        this.message = err.response.data.message
                         this.loading = false
                     })       
             },            
