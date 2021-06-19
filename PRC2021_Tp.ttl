@@ -1,12 +1,25 @@
 @prefix : <http://www.di.uminho.pt/prc2021/PRC2021_Tp#> .
+@prefix fn: <http://www.w3.org/2005/xpath-functions#> .
+@prefix gn: <http://www.geonames.org/ontology#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix wgs: <http://www.w3.org/2003/01/geo/wgs84_pos#> .
 @prefix xml: <http://www.w3.org/XML/1998/namespace> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rdf4j: <http://rdf4j.org/schema/rdf4j#> .
+@prefix sesame: <http://www.openrdf.org/schema/sesame#> .
 @base <http://www.di.uminho.pt/prc2021/PRC2021_Tp#> .
 
 <http://www.di.uminho.pt/prc2021/PRC2021_Tp#> rdf:type owl:Ontology .
+
+#################################################################
+#    Annotation properties
+#################################################################
+
+###  http://www.di.uminho.pt/prc2021/PRC2021_Tp#CriadoPor
+:CriadoPor rdf:type owl:AnnotationProperty .
+
 
 #################################################################
 #    Object Properties
@@ -64,6 +77,14 @@
 
 ###  http://www.di.uminho.pt/prc2021/PRC2021_Tp#password
 :password rdf:type owl:DatatypeProperty .
+
+
+###  http://www.di.uminho.pt/prc2021/PRC2021_Tp#tipoCozinha
+:tipoCozinha rdf:type owl:DatatypeProperty .
+
+
+###  http://www.di.uminho.pt/prc2021/PRC2021_Tp#tipoPrato
+:tipoPrato rdf:type owl:DatatypeProperty .
 
 
 ###  http://www.di.uminho.pt/prc2021/PRC2021_Tp#titulo
@@ -130,7 +151,23 @@ No entanto, com as idas à praia é possível que acabe com as marmitas cheias d
                     "280gr de açúcar de açúcar mascavado escuro" ,
                     "65gr de manteiga" ,
                     "Manteiga para untar" ,
-                    "Sal q.b." .
+                    "Sal q.b." ;
+       :tipoCozinha "Marroquina" ;
+       :tipoPrato "Doces e Sobremesas" ;
+       :titulo "Bolo de Banana e Caramelo" .
+
+
+###  http://www.di.uminho.pt/prc2021/PRC2021_Tp#Rec_2
+:Rec_2 rdf:type owl:NamedIndividual ,
+                :Receita ;
+       :data "17-06-2021" ;
+       :descricao "Comece por descascar e cortar uma maça raineta em cubinhos. Leve a cozer em 2 chávenas de água. Aromatize com 1 pau de canela e uma casquinha de limão. Passados 2/3 minutos de levantar fervura, introduza 1 chávena de aveia e vá mexendo até a aveia estar cozida. Retire o pau de canela e a raspa de limão e depois, com a varinha mágica, triture muito rapidamente.Emprate as papas acompanhadas com passas e mel e temperadas com sal e uma pitada de sal, para realçar os sabores." ;
+       :dificuldade "Média" ;
+       :ingrediente "12gr de fermento" ,
+                    "170gr de manteiga sem sal" ,
+                    "180gr de açúcar mascavado escuro" ;
+       :titulo "Papas de Aveia" ;
+       :CriadoPor <http://www.di.uminho.pt/prc2021/PRC2021_Tp#ric@gmail.com> .
 
 
 ###  http://www.di.uminho.pt/prc2021/PRC2021_Tp#henriquesapessoa@gmail.com
@@ -142,6 +179,46 @@ No entanto, com as idas à praia é possível que acabe com as marmitas cheias d
                                                                         :email "henriquesapessoa@gmail.com" ;
                                                                         :nome "Henrique Sá Pessoa" ;
                                                                         :password 123 .
+
+
+###  http://www.di.uminho.pt/prc2021/PRC2021_Tp#jcc@gmail.com
+<http://www.di.uminho.pt/prc2021/PRC2021_Tp#jcc@gmail.com> rdf:type owl:NamedIndividual ,
+                                                                    :Utilizador ;
+                                                           :email "jcc@gmail.com" ;
+                                                           :nome "João Costa" ;
+                                                           :password 123 .
+
+
+###  http://www.di.uminho.pt/prc2021/PRC2021_Tp#joaquimoliveira@gmail.com
+<http://www.di.uminho.pt/prc2021/PRC2021_Tp#joaquimoliveira@gmail.com> rdf:type owl:NamedIndividual ,
+                                                                                :Utilizador ;
+                                                                       :email "joaquimoliveira@gmail.com" ;
+                                                                       :nome "Joaquim Oliveira" ;
+                                                                       :password "1234" .
+
+
+###  http://www.di.uminho.pt/prc2021/PRC2021_Tp#joaquimpassos@gmail.com
+<http://www.di.uminho.pt/prc2021/PRC2021_Tp#joaquimpassos@gmail.com> rdf:type owl:NamedIndividual ;
+                                                                     :email "joaquimpassos@gmail.com" ;
+                                                                     :nome "Joaquim Passos" ;
+                                                                     :password "1234" .
+
+
+###  http://www.di.uminho.pt/prc2021/PRC2021_Tp#luisramos@gmail.com
+<http://www.di.uminho.pt/prc2021/PRC2021_Tp#luisramos@gmail.com> rdf:type owl:NamedIndividual ,
+                                                                          :Utilizador ;
+                                                                 :email "luisramos@gmail.com" ;
+                                                                 :nome "Luis Ramos" ;
+                                                                 :password 123 .
+
+
+###  http://www.di.uminho.pt/prc2021/PRC2021_Tp#ric@gmail.com
+<http://www.di.uminho.pt/prc2021/PRC2021_Tp#ric@gmail.com> rdf:type owl:NamedIndividual ,
+                                                                    :Utilizador ;
+                                                           :Criou :Rec_2 ;
+                                                           :email "ric@gmail.com" ;
+                                                           :nome "Ricardo Cunha" ;
+                                                           :password 123 .
 
 
 ###  Generated by the OWL API (version 4.5.9.2019-02-01T07:24:44Z) https://github.com/owlcs/owlapi

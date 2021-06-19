@@ -1,8 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken')
-var axios = require('axios')
 var gdb = require("../utils/graphdb");
 
 var prefixes = `
@@ -55,16 +53,21 @@ router.get('/login' ,async function(req, res){
 
 
 router.post('/registar' , async function(req, res){
-  var query = `INSERT DATA
+  var query = `SELECT * WHERE {	<http://www.di.uminho.pt/prc2021/PRC2021_Tp#${req.body.email}>  :email ?s. }`
+  var result =await gdb.execQuery(query)
+  if(result.results.bindings[0]){
+    return res.status(409).jsonp({message: "Utilizador já existe!"})
+  }
+  var query1 = `INSERT DATA
   { 
   <http://www.di.uminho.pt/prc2021/PRC2021_Tp#${req.body.email}> rdf:type :Utilizador;
                                                  :nome "${req.body.nome}" ;
                                                  :email "${req.body.email}" ;
                                                  :password "${req.body.password}".
   }`
-  console.log(query)
 
-  var result = await gdb.execTransaction(query);
+  
+  var result1 = await gdb.execTransaction(query1);
   res.status(201).jsonp({message: "Utilizador registado com sucesso!"})
   
 })
