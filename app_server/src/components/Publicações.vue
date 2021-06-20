@@ -50,9 +50,9 @@
                         <v-icon v-if="idUser==n.autor_id" color="red" @click="removePub(n.id)"> mdi-close </v-icon>
                       </v-row>
                     <br/> 
-                    <span  style="cursor:pointer" @click="handleClick('/receitas/'+n.relativaA)"> <b>Receita: </b> {{ n.relativaA }}  <br/> </span> <br/> 
+                    <span  style="cursor:pointer" @click="handleClick('/receitas/'+n.rec_id)"> <b>Receita: </b> {{ n.titulo_receita }}  <br/> </span> <br/> 
                     <span>  {{ n.descricao }}  <br/> </span> <br/> 
-                    <span> {{ n.creator }} {{ n.data | moment("from") }} </span>
+                    <span> {{ n.autor }} {{ n.data | moment("from") }} </span>
                 </v-col>
               </v-row>
             </v-card>
@@ -60,7 +60,7 @@
         </v-row>
     </v-container>
 
-    <v-row>
+    <v-row v-if="!all">
         <v-col align="center">
             <v-btn @click="searchAll()"> Ver Todas 
             </v-btn>
@@ -71,7 +71,7 @@
 
 
 <script>
-//import axios from 'axios'
+import axios from 'axios'
 import jwt from 'jsonwebtoken'
 
 export default {
@@ -84,6 +84,7 @@ export default {
             pubs: [],
             token: localStorage.getItem('jwt'),
             idUser: '',
+            all: false
         }
     },
     created() {                 
@@ -92,7 +93,6 @@ export default {
             {id:"pub_2",titulo:"O bolo do consolado", creator:"henrique", autor_id:"henrique@gmail.com", relativaA:"rec_1", data:"2021-06-17 12:51:13", descricao:"O verão chegou e é sinónimo de praia. Altura de férias, dar uns mergulhos, apanhar sol, descansar e fazer as refeições na areia. No entanto, com as idas à praia é possível que acabe com as marmitas cheias de sanduíches, hambúrgueres e batatas fritas. Por isso, o 24Kitchen selecionou várias receitas de saladas para poder fazer e levar para a praia. Incluímos receitas vegetarianas (V), sem glúten (SG) e vegans (VG) para que todos em casa possam comer e deliciarem-se."},
             {id:"pub_3",titulo:"O bolo do conso", creator:"ramos5555", autor_id:"ramos@hotmail.com", relativaA:"rec_2", data:"2021-06-18 19:20:13", descricao:"Um bolo com uma grande categoria e uma qualidade extrema!"}
         ]       
-        this.list = this.sorted(this.pubs)
         if (this.token) { 
             this.idUser = jwt.decode(this.token).email
         }
@@ -113,6 +113,17 @@ export default {
           if (confirm("Deseja mesmo remover a publicação?")) {
             console.log("remover " + id)
           }
+        },
+        searchAll(){
+            axios.get("http://localhost:7700/publicacao/")
+                .then(data => {
+                    console.log(data.data.publis)
+                    this.pubs = this.sorted(data.data.publis)
+                    this.all = true
+                })
+                .catch(err => {
+                    console.log(err)
+                })
         }
     }
 }

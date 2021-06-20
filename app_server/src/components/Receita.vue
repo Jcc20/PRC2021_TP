@@ -212,7 +212,7 @@ export default {
             var token = localStorage.getItem('jwt')
             var idUser = jwt.decode(token).email
             json['titulo']= this.titulo
-            json['descricao']= this.descricao
+            json['descricao']= this.pub
             json['idUser']= idUser
             json['idReceita']= this.receita.id
             json['data']= new Date().toISOString().slice(0, 19).replace('T', ' ')
@@ -229,6 +229,7 @@ export default {
             })
             .catch(err => {
                 console.log(err)
+                this.limpar();
                 alert('Não foi possível adicionar a nova publicação')
             })
         }
