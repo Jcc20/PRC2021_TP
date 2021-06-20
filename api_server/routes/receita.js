@@ -159,7 +159,7 @@ router.post('/', async function(req, res, next) {
         console.log(query)
         var queryRel = `INSERT 
         {
-            :${rec_id} :CriadoPor ?p.
+            :${rec_id} :CriadaPor ?p.
             ?p :Criou  :${rec_id}.
         } 
         where{

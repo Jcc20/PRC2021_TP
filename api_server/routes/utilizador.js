@@ -4,19 +4,6 @@ var jwt = require('jsonwebtoken')
 var gdb = require("../utils/graphdb");
 
 
-function verifyToken(token){  
-  token = token.split(" ")[1] // Bearer ey341...
-  var t = null;
-  
-  jwt.verify(token,'PRC2021',function(e,decoded){
-    if(e){
-      t = null
-    }
-    else return t = decoded
-  })
-
-  return t
-}
 
 router.post('/login' ,async function(req, res){
   console.log(req.body)

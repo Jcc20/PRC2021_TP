@@ -71,7 +71,7 @@
                 <v-col cols="12"  class="publicacoes">
                       <v-row no-gutters>
                         <v-col v-for="n in list" :key="n.id" cols="12" sm="6">
-                          <v-card class="pa-6 pub" outlined  @click="handleClick('/receitas/'+n.id)">
+                          <v-card class="pa-6 pub" outlined  @click="handleClick('/receitas/'+n.rec_id)">
                             <v-row>
                               <v-col cols="12" sm="5" style="display:inline-flex">
                                   <v-img src="../../public/default.png"></v-img>

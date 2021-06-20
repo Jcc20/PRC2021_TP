@@ -99,5 +99,51 @@ router.get('/receita/:id', async function(req, res, next) {
 });
 
 
+router.post('/', async function(req, res, next) {
+    var token = verifyToken(req.headers.authorization)
+    if(!token || token.email != req.body.idUser) {res.status(403).jsonp({erro: "Não tem acesso à operação."})}
+    else{
+
+        var pub_id = uuidv4()
+        
+        var query = `INSERT DATA
+        { 
+               :${pub_id} rdf:type :Publicacao;
+                        :titulo "${req.body.titulo}" ;
+                        :data "${req.body.data}" ;
+                        :descricao "${req.body.descricao}".
+                       
+        }`
+        console.log(query)
+        var queryRel = `INSERT 
+        {
+            :${pub_id} :CriadaPor ?p.
+            ?p :Criou  :${pub_id}.
+            :${pub_id} :RelativaA ?r.
+          
+
+        } 
+        where{
+            ?p rdf:type :Utilizador .
+            FILTER regex (str(?p), "${req.body.idUser}").
+            ?r rdf:type :receita .
+            FILTER regex (str(?r), "${req.body.idReceite}").
+        }`
+        console.log(queryRel)
+        try {
+            var result =await gdb.execTransaction(query)
+            console.log(result)
+            var resultRel =await gdb.execTransaction(queryRel)
+            console.log(resultRel)
+            
+            res.status(201).jsonp({message:"Publicação registada com sucesso!", idPub: pub_id})
+        } catch (error) {
+            res.status(500).jsonp({message:"Erro no registo da receita! "+ error})
+        }
+    }
+
+});
+
+
 
 module.exports = router;
