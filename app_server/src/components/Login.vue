@@ -178,7 +178,7 @@ import axios from 'axios'
             register() {
                 this.loading=true
                 var json = {}
-                json['name'] = this.username
+                json['nome'] = this.username
                 json['email']    = this.emailRegister
                 json['password'] = this.passwordRegister
                 axios.post("http://localhost:7700/utilizador/registar/", json)

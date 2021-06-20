@@ -170,6 +170,7 @@ export default {
         }              
         axios.get("http://localhost:7700/receita/"+this.$route.params.id)
             .then(data => {
+                console.log(data.data.receita)
                 this.receita = data.data.receita
                 this.receita.data = "2021-04-02 21:30:01"
             })
@@ -209,7 +210,7 @@ export default {
             json['titulo']= this.titulo
             json['descricao']= this.pub
             json['idUser']= idUser
-            json['idReceita']= this.receita.id
+            json['idReceita']= this.receita.rec_id
             json['data']= new Date().toISOString().slice(0, 19).replace('T', ' ')
             axios({
                 method: "post",
