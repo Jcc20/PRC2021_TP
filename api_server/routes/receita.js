@@ -2,6 +2,24 @@ const { v4: uuidv4 } = require('uuid');
 var express = require('express');
 var router = express.Router();
 var gdb = require("../utils/graphdb");
+
+
+function verifyToken(token){  
+    token = token.split(" ")[1] // Bearer ey341...
+    var t = null;
+    
+    jwt.verify(token,'PRC2021',function(e,decoded){
+      if(e){
+        t = null
+      }
+      else return t = decoded
+    })
+  
+    return t
+  }
+
+
+
 router.get('/', async function(req, res, next) {
     var query = `select  ?s ?d ?da ?di ?tc ?tp ?n (GROUP_CONCAT(distinct ?ig;SEPARATOR="&") AS ?igs) ?t (GROUP_CONCAT(distinct ?g;SEPARATOR="&") AS ?gs) where {  ?s rdf:type :Receita.
         ?s :descricao ?d.
