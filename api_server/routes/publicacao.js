@@ -2,12 +2,11 @@ var express = require('express');
 var router = express.Router();
 var jwt = require('jsonwebtoken')
 var gdb = require("../utils/graphdb");
+const { v4: uuidv4 } = require('uuid');
 
 
 function verifyToken(token){  
-  token = token.split(" ")[1] // Bearer ey341...
   var t = null;
-  
   jwt.verify(token,'PRC2021',function(e,decoded){
     if(e){
       t = null
@@ -101,6 +100,9 @@ router.get('/receita/:id', async function(req, res, next) {
 
 router.post('/', async function(req, res, next) {
     var token = verifyToken(req.headers.authorization)
+    console.log(req.headers.authorization)
+    console.log(token)
+    console.log(req.body.idUser)
     if(!token || token.email != req.body.idUser) {res.status(403).jsonp({erro: "Não tem acesso à operação."})}
     else{
 

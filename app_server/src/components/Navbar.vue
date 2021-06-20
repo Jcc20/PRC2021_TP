@@ -62,6 +62,7 @@
 
 <script>
 import Login from "@/components/Login.vue"
+import jwt from 'jsonwebtoken'
 
 export default {
   name: "App",
@@ -77,6 +78,14 @@ export default {
     goToLink(link) {
       var currentUrl = window.location.pathname;
       if (currentUrl!=link) this.$router.push(link)
+    },
+    verifyToken(token){
+      var t = null;
+      jwt.verify(token,'PRC2021',function(e,decoded){
+        if(e) {t = null}
+        else return t = decoded
+      })
+      return t
     }
   },
   data () {
@@ -84,6 +93,15 @@ export default {
       idUser: null,
       dialog: false,
       token: localStorage.getItem('jwt')
+    }
+  },
+  created(){
+    if (this.token) {
+      if (!this.verifyToken(this.token)) {
+        alert("A sua sessão foi expirada!")
+        localStorage.clear()
+        this.$router.go()
+      }
     }
   }
 };

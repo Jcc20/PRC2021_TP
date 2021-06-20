@@ -207,16 +207,15 @@ export default {
             this.titulo=''
             this.descricao=''
         },
-        submitPub(){
-            /*    
+        submitPub(){ 
             var json={}
             var token = localStorage.getItem('jwt')
             var idUser = jwt.decode(token).email
-            json['']= this.titulo
-            json['']= this.descricao
-            json['']= this.idUser
-            json['']= this.receita.id
-            json['']= new Date().toISOString().slice(0, 19).replace('T', ' ')
+            json['titulo']= this.titulo
+            json['descricao']= this.descricao
+            json['idUser']= idUser
+            json['idReceita']= this.receita.id
+            json['data']= new Date().toISOString().slice(0, 19).replace('T', ' ')
             axios({
                 method: "post",
                 url: "http://localhost:7700/publicacao/",
@@ -231,7 +230,7 @@ export default {
             .catch(err => {
                 console.log(err)
                 alert('Não foi possível adicionar a nova publicação')
-            })*/
+            })
         }
     }
 }
