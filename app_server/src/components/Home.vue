@@ -56,7 +56,7 @@
     
       </v-row>
 
-      <v-row>
+      <v-row v-if="token">
           <v-col cols="8" align="center">
               <AddReceita/>
           </v-col>
@@ -81,6 +81,7 @@ export default {
             list: [],
             pubs: [], 
             recs: [], 
+            token: localStorage.getItem('jwt')
         }
     },
     components: {

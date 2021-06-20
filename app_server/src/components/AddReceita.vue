@@ -12,6 +12,8 @@
                             <h1 >Adicionar Receita</h1>
                         </v-col>
 
+                        <p v-if="alerta" style="margin-bottom:-5px" class="alert"> Obrigatório preencher todos os campos!</p>    
+                        
                         <v-col class="pa-2">
                             <v-text-field 
                             hide-details
@@ -96,12 +98,12 @@
 
 <script>
 //import axios from 'axios'
+//import jwt from 'jsonwebtoken'
 
 export default {
     name: "addReceita",
     data() {
         return{
-          hover: false,
           show:false,
           search: "",
           select: [],
@@ -111,12 +113,10 @@ export default {
           dificuldade:'',
           titulo:'',
           descricao:'',
-          data:null,
-          menu: false,
           loading:false,
           tipoPrato:'',
           tipoCozinha:'',
-          fileInput:''
+          alerta: false,
         }
     },
     methods: {
@@ -124,9 +124,11 @@ export default {
             this.show=false;
             this.titulo='',
             this.descricao='',
-            this.data=null,
-            this.tipo='',
-            this.fileInput='',
+            this.tipoCozinha='',
+            this.tipoPrato='',
+            this.select = [],
+            this.search = '',
+            this.dificuldade = '',
             this.loading=false
         },
         save(date) {
@@ -140,30 +142,51 @@ export default {
             });
           });
         },
+        verificaCampos() {
+            if (this.tiposCozinha=='') return false
+            if (this.tiposPrato=='') return false
+            if (this.dificuldade=='') return false
+            if (this.titulo=='') return false
+            if (this.descricao=='') return false
+            if (this.select==[]) return false
+            return true
+        },
         submeter() {
+            if (!this.verificaCampos()) this.alerta=true
+            else {
+            this.alerta=false
             this.loading=true
-
-            //var token = localStorage.getItem('jwt')
             /*
+            
+            var json={}
+            var token = localStorage.getItem('jwt')
+            var payload = jwt.decode(token)
+            var idUser = payload.id
+            json['']= this.tiposCozinha
+            json['']= this.tiposPrato
+            json['']= this.dificuldade
+            json['']= this.titulo
+            json['']= this.descricao
+            json['']= this.select
+            json['']= this.idUser
             axios({
                 method: "post",
-                url: "http://localhost:8081/api/resource/",
-                data: bodyFormData,
+                url: "http://localhost:7700/receita/",
+                data: json,
                 headers: { "Authorization" : token},
             })
             .then(data => {
-                    alert('Recurso adicionado com sucesso!')
-                    this.cancelar();
-                    this.$router.push('/recursos/' + data.data.idResource)
-                })
+                console.log(data.data)
+                this.cancelar();
+                this.$router.push('/receita/' + data.data.id)
+            })
             .catch(err => {
-                    console.log(err)
-                    alert('Não foi possível adicionar novo recurso')
-                    this.cancelar();
-                })*/
+                console.log(err)
+                alert('Não foi possível adicionar a nova receita')
+                this.cancelar();
+            })*/
+            }
         }
-    },
-    created() {
     }
 }
 
