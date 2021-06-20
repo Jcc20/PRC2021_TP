@@ -1,7 +1,7 @@
+const { v4: uuidv4 } = require('uuid');
 var express = require('express');
 var router = express.Router();
 var gdb = require("../utils/graphdb");
-
 router.get('/', async function(req, res, next) {
     var query = `select  ?s ?d ?da ?di ?tc ?tp ?n (GROUP_CONCAT(distinct ?ig;SEPARATOR="&") AS ?igs) ?t (GROUP_CONCAT(distinct ?g;SEPARATOR="&") AS ?gs) where {  ?s rdf:type :Receita.
         ?s :descricao ?d.
@@ -113,6 +113,51 @@ limit 6`
         res.status(404).jsonp({message:"Receitas não existem!"})
     }
 });
+
+router.post('/', async function(req, res, next) {
+    var rec_id = uuidv4()
+    var ing = ""
+    var poped =  req.body.igredientes.pop()
+    req.body.igredientes.forEach(i => {
+        ing+=i+",\n"
+    });
+    ing+=poped+";\n"
+
+    console.log(ing)
+    var query = `INSERT DATA
+    { 
+           :${rec_id} rdf:type :Receita;
+                    :titulo ${req.body.titulo} ;
+                    :data ${req.body.data} ;
+                    :descricao ${req.body.descricao};
+                    :ingrediente ${ing}
+                    :dificuldade ${req.body.dificuldade};
+                    :tipoCozinha ${req.body.tipoCozinha};
+                    :tipoPrato ${req.body.tipoPrato};
+    }`
+    
+    var queryRel = `INSERT 
+    {
+        :${rec_id} :CriadoPor ?p.
+        ?p :Criou  :${rec_id}.
+    } 
+    where{
+        ?p rdf:type :Utilizador .
+        FILTER regex (str(?p), ${req.body.idUser}).
+    }`
+    try {
+        var result =await gdb.execTransaction(query)
+        console.log(result)
+        var resultRel =await gdb.execTransaction(queryRel)
+        console.log(resultRel)
+        
+        res.status(201).jsonp({message:"Receita registada com sucesso!"})
+    } catch (error) {
+        res.status(500).jsonp({message:"Erro no registo da receita! "+ error})
+    }
+
+});
+
 
 router.get('/tiposCozinha', async function(req, res, next) {
     var query = `select distinct ?p where{ ?s :tipoCozinha ?p.}`
