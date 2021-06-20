@@ -49,7 +49,7 @@ router.get('/', async function(req, res, next) {
     }
     if(req.query.autor){
         query+=`\n?s :CriadaPor ?c.
-    	?c :nome "${req.query.autor}".`
+    	?c :nome "${req.query.autor.replaceAll("_"," ")}".`
     }
     query+="} group by ?s ?d ?da ?di ?t ?tc ?tp ?n"
     console.log(query)
