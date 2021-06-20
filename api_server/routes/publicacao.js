@@ -41,25 +41,21 @@ router.get('/', async function(req, res, next) {
     var result =await gdb.execQuery(query)
 
     var arr = []
-    if(result.results.bindings[0]){
-        result.results.bindings.forEach(a => {
-            var obj = {
-                "pub_id": a.s.value.split('#')[1],
-                "descricao": a.d.value,
-                "titulo": a.t.value,
-                "data": a.da.value,
-                "autor_id": a.a.value.split('#')[1],
-                "autor": a.n.value,
-                "titulo_receita": a.tr.value,
-                "rec_id": a.r.value.split('#')[1]
-            }      
-            arr.push(obj)
-        });   
-        res.status(201).jsonp({publis:arr})
-    }else{
-        res.status(404).jsonp({message:"Não existem publicações!"})
-
-    }
+    
+    result.results.bindings.forEach(a => {
+        var obj = {
+            "pub_id": a.s.value.split('#')[1],
+            "descricao": a.d.value,
+            "titulo": a.t.value,
+            "data": a.da.value,
+            "autor_id": a.a.value.split('#')[1],
+            "autor": a.n.value,
+            "titulo_receita": a.tr.value,
+            "rec_id": a.r.value.split('#')[1]
+        }      
+        arr.push(obj)
+    });   
+    res.status(201).jsonp({publis:arr})  
     
 });
 
