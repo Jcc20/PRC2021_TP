@@ -32,7 +32,8 @@ router.get('/', async function(req, res, next) {
            
     if(req.query.tituloP){
         query+=`\nFILTER regex (str(?t), "${req.query.tituloP}", "i").`
-    }else if(req.query.tituloR){
+    }
+    if(req.query.tituloR){
         query+=`\nFILTER regex (str(?tr), "${req.query.tituloR}", "i").`
     }
     query+="}"
@@ -138,11 +139,40 @@ router.get('/recentes', async function(req, res, next) {
     }
 });
 
+router.post('/gostar', async function(req, res, next) {
+    var token = verifyToken(req.headers.authorization)
+    
+    if(!token || token.email != req.body.idUser) {res.status(403).jsonp({erro: "Não tem acesso à operação."})}
+    else{
+
+        var query = `INSERT 
+        {
+            :${req.body.idReceita} :éGostadoPor ?p.
+            ?p :GostaDe  :${req.body.idReceita}.
+        } 
+        where{
+            ?p rdf:type :Utilizador .
+            FILTER regex (str(?p), "${req.body.idUser}").
+    
+        }`
+        console.log(query)
+        try {
+         
+            var resultRel =await gdb.execTransaction(query)
+            console.log(resultRel)
+            
+            res.status(201).jsonp({message:"Publicação registada com sucesso!"})
+        } catch (error) {
+            res.status(500).jsonp({message:"Erro no registo da receita! "+ error})
+        }
+    }
+
+});
+
+
 router.post('/', async function(req, res, next) {
     var token = verifyToken(req.headers.authorization)
-    console.log(req.headers.authorization)
-    console.log(token)
-    console.log(req.body.idUser)
+   
     if(!token || token.email != req.body.idUser) {res.status(403).jsonp({erro: "Não tem acesso à operação."})}
     else{
 
