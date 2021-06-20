@@ -44,7 +44,12 @@
                     <v-img src="../../public/default.png"></v-img>
                 </v-col>
                 <v-col cols="12" sm="8">
-                    <span style="font-size: 24px;"> <b> {{ n.titulo }}</b> <br/> </span> <br/> 
+                      <v-row class="pa-2">
+                        <b style="font-size: 24px;"> {{ n.titulo }}</b> 
+                        <v-spacer></v-spacer>
+                        <v-icon v-if="idUser==n.autor_id" color="red" @click="removePub(n.id)"> mdi-close </v-icon>
+                      </v-row>
+                    <br/> 
                     <span  style="cursor:pointer" @click="handleClick('/receitas/'+n.relativaA)"> <b>Receita: </b> {{ n.relativaA }}  <br/> </span> <br/> 
                     <span>  {{ n.descricao }}  <br/> </span> <br/> 
                     <span> {{ n.creator }} {{ n.data | moment("from") }} </span>
@@ -55,18 +60,19 @@
         </v-row>
     </v-container>
 
-     <v-row>
-                <v-col align="center">
-                    <v-btn @click="searchAll()"> Ver Todos 
-                    </v-btn>
-                </v-col>
-            </v-row>
+    <v-row>
+        <v-col align="center">
+            <v-btn @click="searchAll()"> Ver Todas 
+            </v-btn>
+        </v-col>
+    </v-row>
   </div>
 </template>
 
 
 <script>
 //import axios from 'axios'
+import jwt from 'jsonwebtoken'
 
 export default {
     name: 'publicacoes',
@@ -76,16 +82,20 @@ export default {
             tituloP: '',
             list: [],
             pubs: [],
-            items: ["titulo","receita"]
+            token: localStorage.getItem('jwt'),
+            idUser: '',
         }
     },
     created() {                 
         this.pubs = [
-            {id:"pub_1",titulo:"O bolo do consolo", creator:"henrique", relativaA:"rec_3", data:"2021-02-17 22:51:13", descricao:"O verão chegou e é sinónimo de praia. Altura de férias, dar uns mergulhos, apanhar sol, descansar e fazer as refeições na areia. No entanto, com as idas à praia é possível que acabe com as marmitas cheias de sanduíches, hambúrgueres e batatas fritas. Por isso, o 24Kitchen selecionou várias receitas de saladas para poder fazer e levar para a praia. Incluímos receitas vegetarianas (V), sem glúten (SG) e vegans (VG) para que todos em casa possam comer e deliciarem-se.  que todos em casa possam comer e deliciarem-se. O verão chegou e é sinónimo de praia. Altura de férias, dar uns mergulhos, apanhar sol, descansar e fazer as refeições na areia. No entanto, com as idas à praia é possível que acdeliciarem-se."},
-            {id:"pub_2",titulo:"O bolo do consolado", creator:"jose", relativaA:"rec_1", data:"2021-06-17 12:51:13", descricao:"O verão chegou e é sinónimo de praia. Altura de férias, dar uns mergulhos, apanhar sol, descansar e fazer as refeições na areia. No entanto, com as idas à praia é possível que acabe com as marmitas cheias de sanduíches, hambúrgueres e batatas fritas. Por isso, o 24Kitchen selecionou várias receitas de saladas para poder fazer e levar para a praia. Incluímos receitas vegetarianas (V), sem glúten (SG) e vegans (VG) para que todos em casa possam comer e deliciarem-se."},
-            {id:"pub_3",titulo:"O bolo do conso", creator:"afonso", relativaA:"rec_2", data:"2021-06-18 19:20:13", descricao:"Um bolo com uma grande categoria e uma qualidade extrema!"}
+            {id:"pub_1",titulo:"O bolo do consolo", creator:"henrique", autor_id:"henrique@gmail.com", relativaA:"rec_3", data:"2021-02-17 22:51:13", descricao:"O verão chegou e é sinónimo de praia. Altura de férias, dar uns mergulhos, apanhar sol, descansar e fazer as refeições na areia. No entanto, com as idas à praia é possível que acabe com as marmitas cheias de sanduíches, hambúrgueres e batatas fritas. Por isso, o 24Kitchen selecionou várias receitas de saladas para poder fazer e levar para a praia. Incluímos receitas vegetarianas (V), sem glúten (SG) e vegans (VG) para que todos em casa possam comer e deliciarem-se.  que todos em casa possam comer e deliciarem-se. O verão chegou e é sinónimo de praia. Altura de férias, dar uns mergulhos, apanhar sol, descansar e fazer as refeições na areia. No entanto, com as idas à praia é possível que acdeliciarem-se."},
+            {id:"pub_2",titulo:"O bolo do consolado", creator:"henrique", autor_id:"henrique@gmail.com", relativaA:"rec_1", data:"2021-06-17 12:51:13", descricao:"O verão chegou e é sinónimo de praia. Altura de férias, dar uns mergulhos, apanhar sol, descansar e fazer as refeições na areia. No entanto, com as idas à praia é possível que acabe com as marmitas cheias de sanduíches, hambúrgueres e batatas fritas. Por isso, o 24Kitchen selecionou várias receitas de saladas para poder fazer e levar para a praia. Incluímos receitas vegetarianas (V), sem glúten (SG) e vegans (VG) para que todos em casa possam comer e deliciarem-se."},
+            {id:"pub_3",titulo:"O bolo do conso", creator:"ramos5555", autor_id:"ramos@hotmail.com", relativaA:"rec_2", data:"2021-06-18 19:20:13", descricao:"Um bolo com uma grande categoria e uma qualidade extrema!"}
         ]       
         this.list = this.sorted(this.pubs)
+        if (this.token) { 
+            this.idUser = jwt.decode(this.token).email
+        }
     },
     methods: {
         handleClick(value) {
@@ -99,6 +109,11 @@ export default {
             console.log("filtro: " + this.filter)
             console.log("word: " + this.word)
         },
+        removePub(id) {
+          if (confirm("Deseja mesmo remover a publicação?")) {
+            console.log("remover " + id)
+          }
+        }
     }
 }
 

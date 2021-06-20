@@ -107,8 +107,8 @@ export default {
           show:false,
           search: "",
           select: [],
-          tiposCozinha: ["marroquina","chinesa","italiana","baguete"],
-          tiposPrato: ["carne","peixe","sobremesa","pizza"],
+          tiposCozinha: ["Austríaca","Belga","Brasileira","Madeirense","Tailandesa","Macaense","Ucraniana","Africana","Mexicana","Espanhola","Suiça","Holandesa","Mediterrânica","Americana","Asiática","Inglesa","América do Sul","Francesa","Grega","Indiana","Árabe","Portuguesa","Marroquina","Chinesa","Italiana"],
+          tiposPrato: ["Snack","Marisco","Vegetariano","Entradas e Petiscos","Saladas","Sopas","Outros acompanhamentos","Massa","Arroz","Bebida","Vegetais","Carne","Peixe","Doces e Sobremesa","Pizza"],
           dificuldades: ["Fácil","Média","Difícil"],
           dificuldade:'',
           titulo:'',
@@ -118,6 +118,10 @@ export default {
           tipoCozinha:'',
           alerta: false,
         }
+    },
+    created(){
+        this.tiposCozinha = this.sorted(this.tiposCozinha)
+        this.tiposPrato = this.sorted(this.tiposPrato)
     },
     methods: {
         cancelar() {
@@ -130,6 +134,9 @@ export default {
             this.search = '',
             this.dificuldade = '',
             this.loading=false
+        },
+        sorted(lista) {
+            return lista.sort((a,b) => (a < b) ? -1 : ((b < a) ? 1 : 0))
         },
         save(date) {
             this.$refs.menu.save(date)
@@ -160,8 +167,7 @@ export default {
             
             var json={}
             var token = localStorage.getItem('jwt')
-            var payload = jwt.decode(token)
-            var idUser = payload.id
+            var idUser = jwt.decode(token).email
             json['']= this.tiposCozinha
             json['']= this.tiposPrato
             json['']= this.dificuldade
@@ -169,6 +175,7 @@ export default {
             json['']= this.descricao
             json['']= this.select
             json['']= this.idUser
+            json['']= new Date().toISOString().slice(0, 19).replace('T', ' ')
             axios({
                 method: "post",
                 url: "http://localhost:7700/receita/",
