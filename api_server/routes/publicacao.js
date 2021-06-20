@@ -87,7 +87,8 @@ router.get('/receita/:id', async function(req, res, next) {
                 "data": a.da.value,
                 "titulo_receita": a.tr.value,
                 "autor_id": a.a.value.split('#')[1],
-                "autor": a.n.value
+                "autor": a.n.value,
+                "rec_id": req.params.id
             }      
             arr.push(obj)
         });   
