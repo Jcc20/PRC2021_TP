@@ -171,7 +171,7 @@ export default {
             json['tipoPrato']= this.tipoPrato
             json['dificuldade']= this.dificuldade
             json['titulo']= this.titulo
-            json['descricao']= this.descricao.replace('\n',' ')
+            json['descricao']= this.descricao.replaceAll('\n',' ')
             json['ingredientes']= this.select
             json['idUser']= idUser
             json['data']= new Date().toISOString().slice(0, 19).replace('T', ' ')
@@ -183,13 +183,15 @@ export default {
             })
             .then(data => {
                 console.log(data.data)
-                this.cancelar();
+               // this.cancelar();
+               this.loading=false
                 this.$router.push('/receitas/' + data.data.idRec)
             })
             .catch(err => {
                 console.log(err)
                 alert('Não foi possível adicionar a nova receita')
-                this.cancelar();
+                this.loading=false
+                //this.cancelar();
             })
             }
         }
