@@ -139,7 +139,7 @@ router.get('/recentes', async function(req, res, next) {
     }
 });
 
-router.post('/gostar', async function(req, res, next) {
+router.post('/degostar', async function(req, res, next) {
     var token = verifyToken(req.headers.authorization)
     
     if(!token || token.email != req.body.idUser) {res.status(403).jsonp({erro: "Não tem acesso à operação."})}
@@ -164,7 +164,7 @@ router.post('/gostar', async function(req, res, next) {
 
 });
 
-router.post('/degostar', async function(req, res, next) {
+router.post('/gostar', async function(req, res, next) {
     var token = verifyToken(req.headers.authorization)
     
     if(!token || token.email != req.body.idUser) {res.status(403).jsonp({erro: "Não tem acesso à operação."})}
@@ -186,9 +186,9 @@ router.post('/degostar', async function(req, res, next) {
             var resultRel =await gdb.execTransaction(query)
             console.log(resultRel)
             
-            res.status(201).jsonp({message:"Publicação registada com sucesso!"})
+            res.status(201).jsonp({message:"Gosto registado com sucesso!"})
         } catch (error) {
-            res.status(500).jsonp({message:"Erro no registo da receita! "+ error})
+            res.status(500).jsonp({message:"Erro no registo do gosto! "+ error})
         }
     }
 
