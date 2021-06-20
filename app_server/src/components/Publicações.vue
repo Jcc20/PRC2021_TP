@@ -88,11 +88,27 @@ export default {
         }
     },
     created() {                 
-        this.pubs = [
-            {id:"pub_1",titulo:"O bolo do consolo", creator:"henrique", autor_id:"henrique@gmail.com", relativaA:"rec_3", data:"2021-02-17 22:51:13", descricao:"O verão chegou e é sinónimo de praia. Altura de férias, dar uns mergulhos, apanhar sol, descansar e fazer as refeições na areia. No entanto, com as idas à praia é possível que acabe com as marmitas cheias de sanduíches, hambúrgueres e batatas fritas. Por isso, o 24Kitchen selecionou várias receitas de saladas para poder fazer e levar para a praia. Incluímos receitas vegetarianas (V), sem glúten (SG) e vegans (VG) para que todos em casa possam comer e deliciarem-se.  que todos em casa possam comer e deliciarem-se. O verão chegou e é sinónimo de praia. Altura de férias, dar uns mergulhos, apanhar sol, descansar e fazer as refeições na areia. No entanto, com as idas à praia é possível que acdeliciarem-se."},
-            {id:"pub_2",titulo:"O bolo do consolado", creator:"henrique", autor_id:"henrique@gmail.com", relativaA:"rec_1", data:"2021-06-17 12:51:13", descricao:"O verão chegou e é sinónimo de praia. Altura de férias, dar uns mergulhos, apanhar sol, descansar e fazer as refeições na areia. No entanto, com as idas à praia é possível que acabe com as marmitas cheias de sanduíches, hambúrgueres e batatas fritas. Por isso, o 24Kitchen selecionou várias receitas de saladas para poder fazer e levar para a praia. Incluímos receitas vegetarianas (V), sem glúten (SG) e vegans (VG) para que todos em casa possam comer e deliciarem-se."},
-            {id:"pub_3",titulo:"O bolo do conso", creator:"ramos5555", autor_id:"ramos@hotmail.com", relativaA:"rec_2", data:"2021-06-18 19:20:13", descricao:"Um bolo com uma grande categoria e uma qualidade extrema!"}
-        ]       
+        if (this.$route.params.receita) {
+          axios.get("http://localhost:7700/publicacao/receita/"+this.$route.params.receita)
+              .then(data => {
+                  console.log(data.data.publis)
+                  this.pubs = this.sorted(data.data.publis)
+                  this.all = true
+              })
+              .catch(err => {
+                  console.log(err)
+              })   
+        }
+        else {
+          axios.get("http://localhost:7700/publicacao/")
+              .then(data => {
+                  console.log(data.data.publis)
+                  this.pubs = this.sorted(data.data.publis)
+              })
+              .catch(err => {
+                  console.log(err)
+              })   
+        }  
         if (this.token) { 
             this.idUser = jwt.decode(this.token).email
         }

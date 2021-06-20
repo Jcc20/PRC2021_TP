@@ -57,17 +57,12 @@
                    <span> <b> Tipo de prato:</b> {{receita.tipoPrato}} </span>
                    
                </v-col>
-               <v-col v-if="idUser==receita.autor_id" align="right">
+               <v-col  align="right">
                    <v-btn style="margin-right:10px" elevation="4" @click="handleClick('/publicacoes?receita=' + receita.rec_id)">
                         Ver publicacoes
                     </v-btn>
-                   <v-btn elevation="4" @click="removeReceita(receita.rec_id)">
+                   <v-btn v-if="idUser==receita.autor_id" elevation="4" @click="removeReceita(receita.rec_id)">
                         Remover Receita
-                    </v-btn>
-               </v-col>
-               <v-col v-else align="right">
-                   <v-btn elevation="4" @click="handleClick('/publicacoes?receita=' + receita.rec_id)">
-                        Ver publicacoes
                     </v-btn>
                </v-col>
             </v-row>
