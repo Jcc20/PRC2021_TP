@@ -100,7 +100,7 @@ router.get('/receita/:id', async function(req, res, next) {
 
 
 router.get('/recentes', async function(req, res, next) {
-    var query = `select  ?s ?d ?da ?t ?tr ?a ?n where {  ?s rdf:type :Publicacao.
+    var query = `select ?r ?s ?d ?da ?t ?tr ?a ?n where {  ?s rdf:type :Publicacao.
         ?s :RelativaA ?r.
         ?r :titulo ?tr.
         ?s :descricao ?d.
@@ -124,6 +124,7 @@ router.get('/recentes', async function(req, res, next) {
                 "titulo": a.t.value,
                 "data": a.da.value,
                 "titulo_receita": a.tr.value,
+                "rec_id": a.r.value.split('#')[1],
                 "autor_id": a.a.value.split('#')[1],
                 "autor": a.n.value
             }      
