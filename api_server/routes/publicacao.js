@@ -127,7 +127,7 @@ router.post('/', async function(req, res, next) {
             ?p rdf:type :Utilizador .
             FILTER regex (str(?p), "${req.body.idUser}").
             ?r rdf:type :receita .
-            FILTER regex (str(?r), "${req.body.idReceite}").
+            FILTER regex (str(?r), "${req.body.idReceita}").
         }`
         console.log(queryRel)
         try {
