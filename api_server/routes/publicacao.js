@@ -50,7 +50,7 @@ router.get('/', async function(req, res, next) {
                 "autor_id": a.a.value.split('#')[1],
                 "autor": a.n.value,
                 "titulo_receita": a.tr.value,
-                "rec_id": a.r.value.split('#')[1],
+                "rec_id": a.r.value.split('#')[1]
             }      
             arr.push(obj)
         });   
