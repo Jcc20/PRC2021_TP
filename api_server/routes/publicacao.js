@@ -99,53 +99,39 @@ router.get('/receita/:id', async function(req, res, next) {
 
 
 router.get('/recentes', async function(req, res, next) {
-    var query = `select ?d ?s ?da ?di ?tc ?tp ?a ?n (GROUP_CONCAT(distinct ?ig;SEPARATOR="&") AS ?igs) ?t (GROUP_CONCAT(distinct ?g;SEPARATOR="&") AS ?gs) where {  ?s rdf:type :Receita.
+    var query = `select  ?s ?d ?da ?t ?tr ?a ?n where {  ?s rdf:type :Publicacao.
+        ?s :RelativaA ?r.
+        ?r :titulo ?tr.
         ?s :descricao ?d.
         ?s :data ?da.
-        ?s :dificuldade ?di.
-        ?s :ingrediente ?ig.
    		?s :titulo ?t.
-        ?s :tipoCozinha ?tc.
-        ?s :tipoPrato ?tp.
-        ?s :CriadaPor ?a.
+   		?s :CriadaPor ?a.
         ?a :nome ?n.
-        OPTIONAL {?s :éGostadoPor ?g.}
-    } 
-group by ?d ?s ?da ?di ?t ?tc ?tp ?a ?n
-order by desc(?da)
-limit 6`
+        }
+        order by desc(?da)
+        limit 3
+       
+       ` 
     var result =await gdb.execQuery(query)
    
+    var arr = []
     if(result.results.bindings[0]){
-        var arr = []
         result.results.bindings.forEach(a => {
-            var ing=[]
-            a.igs.value.split('&').forEach(i=>{
-                ing.push(i)
-            })
-            var gostos = []
-            a.gs.value.split('&').forEach(g=>{
-                console.log(g)
-               gostos.push(g.split('#')[1])
-            })
             var obj = {
-                "rec_id": a.s.value.split('#')[1],
+                "pub_id": a.s.value.split('#')[1],
                 "descricao": a.d.value,
-                "ingredientes": ing,
                 "titulo": a.t.value,
-                "dificuldade": a.di.value,
-                "gostos": gostos,
                 "data": a.da.value,
-                "tipoCozinha": a.tc.value,
-                "tipoPrato": a.tp.value,
+                "titulo_receita": a.tr.value,
+                "autor_id": a.a.value.split('#')[1],
                 "autor": a.n.value
-            }
+            }      
             arr.push(obj)
-        });
-        res.status(201).jsonp({receitas:arr})
-    }
-    else{
-        res.status(404).jsonp({message:"Receitas não existem!"})
+        });   
+        res.status(201).jsonp({publis:arr})
+    }else{
+        res.status(404).jsonp({message:"Não existem publicações!"})
+
     }
 });
 
@@ -179,7 +165,7 @@ router.post('/', async function(req, res, next) {
         where{
             ?p rdf:type :Utilizador .
             FILTER regex (str(?p), "${req.body.idUser}").
-            ?r rdf:type :receita .
+            ?r rdf:type :Receita .
             FILTER regex (str(?r), "${req.body.idReceita}").
         }`
         console.log(queryRel)
