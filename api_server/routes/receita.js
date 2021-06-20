@@ -37,14 +37,17 @@ router.get('/', async function(req, res, next) {
         query+=`\n?s :titulo ?r.
         FILTER regex (str(?r), "${req.query.titulo}", "i").`
     }
-    else if(req.query.tipoCozinha){
+    if(req.query.tipoCozinha){
         query+="\n?s :tipoCozinha \""+req.query.tipoCozinha+"\"."
-    }else if(req.query.tipoPrato){
+    }
+    if(req.query.tipoPrato){
         query+="\n?s :tipoPrato \""+req.query.tipoPrato+"\"."
-    }else if(req.query.ingrediente){
+    } 
+    if(req.query.ingrediente){
         query+=`\n?s :ingrediente ?i.
         FILTER regex (str(?i), "${req.query.ingrediente}", "i").`
-    }else if(req.query.autor){
+    }
+    if(req.query.autor){
         query+=`\n?s :CriadaPor ?c.
     	?c :nome "${req.query.autor}".`
     }
