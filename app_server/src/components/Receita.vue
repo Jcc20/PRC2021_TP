@@ -15,12 +15,12 @@
                 <v-col sm="1" align="right">
                     <v-row align="center">
                         <div v-if="token">
-                            <div v-if="receita.gostos.includes(receita.autor_id)">
-                                <v-icon @click="dislike(receita.rec_id)" x-large color="red">mdi-cards-heart</v-icon>
+                            <div v-if="receita.gostos.includes(idUser)">
+                                <v-icon @click="dislike(idUser)" x-large color="red">mdi-cards-heart</v-icon>
                                 <span style="margin-left:5px; font-size:20px"> {{ receita.gostos.length }} </span>
                             </div>
                             <div v-else>
-                                <v-icon @click="like(receita.autor_id)" x-large color="grey">mdi-cards-heart</v-icon>
+                                <v-icon @click="like(idUser)" x-large color="grey">mdi-cards-heart</v-icon>
                                 <span style="margin-left:5px; font-size:20px"> {{ receita.gostos.length }} </span>
                             </div>
                         </div>
@@ -45,7 +45,7 @@
             </v-card>
 
             <v-row>
-               <v-col cols="8">
+               <v-col cols="7">
                    <span> <b> Dificuldade:</b>  
                         <span v-if="receita.dificuldade=='Fácil'" style="color:green"> {{receita.dificuldade}} </span>
                         <span  v-else-if="receita.dificuldade=='Média'" style="color:orange"> {{receita.dificuldade}} </span>
@@ -57,7 +57,15 @@
                    <span> <b> Tipo de prato:</b> {{receita.tipoPrato}} </span>
                    
                </v-col>
-               <v-col  align="right">
+               <v-col v-if="idUser==receita.autor_id" align="right">
+                   <v-btn style="margin-right:10px" elevation="4" @click="handleClick('/publicacoes?receita=' + receita.rec_id)">
+                        Ver publicacoes
+                    </v-btn>
+                   <v-btn elevation="4" @click="removeReceita(receita.rec_id)">
+                        Remover Receita
+                    </v-btn>
+               </v-col>
+               <v-col v-else align="right">
                    <v-btn elevation="4" @click="handleClick('/publicacoes?receita=' + receita.rec_id)">
                         Ver publicacoes
                     </v-btn>
@@ -147,6 +155,7 @@
 
 <script>
 import axios from 'axios'
+import jwt from 'jsonwebtoken'
 
 export default {
     name: 'receita',
@@ -157,9 +166,13 @@ export default {
             pub:'',
             titulo:'',
             alerta: false,
+            idUser:''
         }
     },
-    created() {                 
+    created() {   
+        if (this.token) { 
+            this.idUser = jwt.decode(this.token).email
+        }              
         axios.get("http://localhost:7700/receita/"+this.$route.params.id)
             .then(data => {
                 this.receita = data.data.receita
@@ -173,6 +186,11 @@ export default {
         handleClick(value) {
           this.$router.push(value)      
         },
+        removeReceita(id) {
+          if (confirm("Deseja mesmo remover a receita?")) {
+            console.log("remover " + id)
+          }
+        },
         sorted(lista) {
             return lista.sort((a,b) => (a.data < b.data) ? 1 : ((b.data < a.data) ? -1 : 0))
         },
@@ -185,8 +203,35 @@ export default {
             this.receita.gostos.splice(index, 1);
             //axios 
         },
+        limpar(){
+            this.titulo=''
+            this.descricao=''
+        },
         submitPub(){
-
+            /*    
+            var json={}
+            var token = localStorage.getItem('jwt')
+            var idUser = jwt.decode(token).email
+            json['']= this.titulo
+            json['']= this.descricao
+            json['']= this.idUser
+            json['']= this.receita.id
+            json['']= new Date().toISOString().slice(0, 19).replace('T', ' ')
+            axios({
+                method: "post",
+                url: "http://localhost:7700/publicacao/",
+                data: json,
+                headers: { "Authorization" : token},
+            })
+            .then(data => {
+                console.log(data.data)
+                this.limpar();
+                alert('Publicação foi adicionada com sucesso!')
+            })
+            .catch(err => {
+                console.log(err)
+                alert('Não foi possível adicionar a nova publicação')
+            })*/
         }
     }
 }

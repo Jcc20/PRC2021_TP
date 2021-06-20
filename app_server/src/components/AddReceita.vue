@@ -12,6 +12,8 @@
                             <h1 >Adicionar Receita</h1>
                         </v-col>
 
+                        <p v-if="alerta" style="margin-bottom:-5px" class="alert"> Obrigatório preencher todos os campos!</p>    
+                        
                         <v-col class="pa-2">
                             <v-text-field 
                             hide-details
@@ -23,67 +25,63 @@
                             ></v-text-field>
                         </v-col>
 
-                        <v-col class="pa-2">
-                            <v-text-field 
+
+                        <v-col class="pa-2" style="margin-top:-5px">
+                            <v-autocomplete
+                              v-model="tipoCozinha"
+                              :items="tiposCozinha"
+                              outlined
+                              dense
+                              label="Tipo de cozinha"
+                            ></v-autocomplete>
+                        </v-col>
+
+                        <v-col class="pa-2" style="margin-top:-30px">
+                            <v-autocomplete
+                              v-model="tipoPrato"
+                              :items="tiposPrato"
+                              outlined
+                              dense
+                              label="Tipo de prato"
+                            ></v-autocomplete>
+                        </v-col>
+
+                        <v-col class="pa-2" style="margin-top:-30px">
+                            <v-select
+                              v-model="dificuldade"
+                              :items="dificuldades"
+                              outlined
+                              dense
+                              label="Dificuldade do prato"
+                            ></v-select>
+                        </v-col>
+
+                        <v-col class="pa-2" style="margin-top:-30px">
+                          <v-combobox 
+                            multiple
+                            v-model="select" 
+                            label="Ingredientes" 
+                            chips
+                            outlined
+                            deletable-chips
+                            class="tag-input"
+                            :search-input.sync="search" 
+                            @keyup.tab="updateTags"
+                            @paste="updateTags">
+                          </v-combobox>
+                        </v-col>
+                      
+                        <v-col class="pa-2" style="margin-top:-35px">
+                            <v-textarea 
                             hide-details
                             dense
                             type="text" 
                             v-model="descricao" 
                             label="Descrição"
                             outlined
-                            ></v-text-field>
+                            ></v-textarea>
                         </v-col>
 
-                        <v-col class="pa-2" style="margin-bottom:-25px">
-                            <v-autocomplete
-                              v-model="tipo"
-                              :items="types"
-                              outlined
-                              dense
-                              label="Seleciona o tipo"
-                            ></v-autocomplete>
-                        </v-col>
-
-                        <v-col class="pa-2">
-                            <v-menu
-                              ref="menu"
-                              v-model="menu"
-                              :close-on-content-click="false"
-                              transition="scale-transition"
-                              offset-y
-                              min-width="auto"
-                            >
-                                <template v-slot:activator="{ on, attrs }">
-                                  <v-text-field
-                                    v-model="data"
-                                    hide-details
-                                    dense
-                                    outlined
-                                    label="Data de criação"
-                                    readonly
-                                    v-bind="attrs"
-                                    v-on="on"
-                                   ></v-text-field>
-                                </template>
-
-                                <v-date-picker
-                                  ref="picker"
-                                  v-model="data"
-                                  color="#4F4E81"
-                                  :max="new Date().toISOString().substr(0, 10)"
-                                  min="1900-01-01"
-                                  @change="save"
-                                ></v-date-picker>
-                            </v-menu>
-                        </v-col>
-                      
-                        <v-col cols="1" offset="11">
-                            <v-file-input
-                              v-model="fileInput"
-                              hide-input
-                              prepend-icon="mdi-plus"
-                            ></v-file-input>
-                        </v-col>
                         
                         <v-col align="right">
                           <v-btn :loading="loading" v-ripple="{ class: 'primary--text' }" width="150" style="height:40px" class="white--text" elevation="1" v-on:click="submeter()" color="#00ace6">Submeter</v-btn>
@@ -100,60 +98,102 @@
 
 <script>
 //import axios from 'axios'
+//import jwt from 'jsonwebtoken'
 
 export default {
     name: "addReceita",
     data() {
         return{
-          hover: false,
           show:false,
-          types:[],
+          search: "",
+          select: [],
+          tiposCozinha: ["Austríaca","Belga","Brasileira","Madeirense","Tailandesa","Macaense","Ucraniana","Africana","Mexicana","Espanhola","Suiça","Holandesa","Mediterrânica","Americana","Asiática","Inglesa","América do Sul","Francesa","Grega","Indiana","Árabe","Portuguesa","Marroquina","Chinesa","Italiana"],
+          tiposPrato: ["Snack","Marisco","Vegetariano","Entradas e Petiscos","Saladas","Sopas","Outros acompanhamentos","Massa","Arroz","Bebida","Vegetais","Carne","Peixe","Doces e Sobremesa","Pizza"],
+          dificuldades: ["Fácil","Média","Difícil"],
+          dificuldade:'',
           titulo:'',
           descricao:'',
-          data:null,
-          menu: false,
           loading:false,
-          tipo:'',
-          fileInput:''
+          tipoPrato:'',
+          tipoCozinha:'',
+          alerta: false,
         }
+    },
+    created(){
+        this.tiposCozinha = this.sorted(this.tiposCozinha)
+        this.tiposPrato = this.sorted(this.tiposPrato)
     },
     methods: {
         cancelar() {
             this.show=false;
             this.titulo='',
             this.descricao='',
-            this.data=null,
-            this.tipo='',
-            this.fileInput='',
+            this.tipoCozinha='',
+            this.tipoPrato='',
+            this.select = [],
+            this.search = '',
+            this.dificuldade = '',
             this.loading=false
+        },
+        sorted(lista) {
+            return lista.sort((a,b) => (a < b) ? -1 : ((b < a) ? 1 : 0))
         },
         save(date) {
             this.$refs.menu.save(date)
         },
+        updateTags() {
+          this.$nextTick(() => {
+            this.select.push(...this.search.split(","));
+            this.$nextTick(() => {
+              this.search = "";
+            });
+          });
+        },
+        verificaCampos() {
+            if (this.tiposCozinha=='') return false
+            if (this.tiposPrato=='') return false
+            if (this.dificuldade=='') return false
+            if (this.titulo=='') return false
+            if (this.descricao=='') return false
+            if (this.select==[]) return false
+            return true
+        },
         submeter() {
+            if (!this.verificaCampos()) this.alerta=true
+            else {
+            this.alerta=false
             this.loading=true
-
-            //var token = localStorage.getItem('jwt')
             /*
+            
+            var json={}
+            var token = localStorage.getItem('jwt')
+            var idUser = jwt.decode(token).email
+            json['']= this.tiposCozinha
+            json['']= this.tiposPrato
+            json['']= this.dificuldade
+            json['']= this.titulo
+            json['']= this.descricao
+            json['']= this.select
+            json['']= this.idUser
+            json['']= new Date().toISOString().slice(0, 19).replace('T', ' ')
             axios({
                 method: "post",
-                url: "http://localhost:8081/api/resource/",
-                data: bodyFormData,
+                url: "http://localhost:7700/receita/",
+                data: json,
                 headers: { "Authorization" : token},
             })
             .then(data => {
-                    alert('Recurso adicionado com sucesso!')
-                    this.cancelar();
-                    this.$router.push('/recursos/' + data.data.idResource)
-                })
+                console.log(data.data)
+                this.cancelar();
+                this.$router.push('/receita/' + data.data.id)
+            })
             .catch(err => {
-                    console.log(err)
-                    alert('Não foi possível adicionar novo recurso')
-                    this.cancelar();
-                })*/
+                console.log(err)
+                alert('Não foi possível adicionar a nova receita')
+                this.cancelar();
+            })*/
+            }
         }
-    },
-    created() {
     }
 }
 
