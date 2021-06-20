@@ -119,23 +119,23 @@ router.post('/', async function(req, res, next) {
     var ing = ""
     var poped =  req.body.ingredientes.pop()
     req.body.ingredientes.forEach(i => {
-        ing+=i+",\n"
+        ing+='"'+i+'"'+",\n"
     });
-    ing+=poped+";\n"
+    ing+='"'+poped+'"'+";\n"
 
     console.log(ing)
     var query = `INSERT DATA
     { 
            :${rec_id} rdf:type :Receita;
-                    :titulo ${req.body.titulo} ;
-                    :data ${req.body.data} ;
-                    :descricao ${req.body.descricao};
+                    :titulo "${req.body.titulo}" ;
+                    :data "${req.body.data}" ;
+                    :descricao "${req.body.descricao}";
                     :ingrediente ${ing}
-                    :dificuldade ${req.body.dificuldade};
-                    :tipoCozinha ${req.body.tipoCozinha};
-                    :tipoPrato ${req.body.tipoPrato};
+                    :dificuldade "${req.body.dificuldade}";
+                    :tipoCozinha "${req.body.tipoCozinha}";
+                    :tipoPrato "${req.body.tipoPrato}".
     }`
-    
+    console.log(query)
     var queryRel = `INSERT 
     {
         :${rec_id} :CriadoPor ?p.
@@ -143,15 +143,16 @@ router.post('/', async function(req, res, next) {
     } 
     where{
         ?p rdf:type :Utilizador .
-        FILTER regex (str(?p), ${req.body.idUser}).
+        FILTER regex (str(?p), "${req.body.idUser}").
     }`
+    console.log(queryRel)
     try {
         var result =await gdb.execTransaction(query)
         console.log(result)
         var resultRel =await gdb.execTransaction(queryRel)
         console.log(resultRel)
         
-        res.status(201).jsonp({message:"Receita registada com sucesso!"})
+        res.status(201).jsonp({message:"Receita registada com sucesso!", idRec: rec_id})
     } catch (error) {
         res.status(500).jsonp({message:"Erro no registo da receita! "+ error})
     }

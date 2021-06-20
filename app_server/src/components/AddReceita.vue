@@ -97,8 +97,8 @@
 
 
 <script>
-//import axios from 'axios'
-//import jwt from 'jsonwebtoken'
+import axios from 'axios'
+import jwt from 'jsonwebtoken'
 
 export default {
     name: "addReceita",
@@ -162,20 +162,18 @@ export default {
             if (!this.verificaCampos()) this.alerta=true
             else {
             this.alerta=false
-            this.loading=true
-            /*
-            
+            this.loading=true          
             var json={}
             var token = localStorage.getItem('jwt')
             var idUser = jwt.decode(token).email
-            json['']= this.tiposCozinha
-            json['']= this.tiposPrato
-            json['']= this.dificuldade
-            json['']= this.titulo
-            json['']= this.descricao
-            json['']= this.select
-            json['']= this.idUser
-            json['']= new Date().toISOString().slice(0, 19).replace('T', ' ')
+            json['tipoCozinha']= this.tipoCozinha
+            json['tipoPrato']= this.tipoPrato
+            json['dificuldade']= this.dificuldade
+            json['titulo']= this.titulo
+            json['descricao']= this.descricao
+            json['ingredientes']= this.select
+            json['idUser']= idUser
+            json['data']= new Date().toISOString().slice(0, 19).replace('T', ' ')
             axios({
                 method: "post",
                 url: "http://localhost:7700/receita/",
@@ -185,13 +183,13 @@ export default {
             .then(data => {
                 console.log(data.data)
                 this.cancelar();
-                this.$router.push('/receita/' + data.data.id)
+                this.$router.push('/receitas/' + data.data.idRec)
             })
             .catch(err => {
                 console.log(err)
                 alert('Não foi possível adicionar a nova receita')
                 this.cancelar();
-            })*/
+            })
             }
         }
     }
