@@ -183,15 +183,13 @@ export default {
             })
             .then(data => {
                 console.log(data.data)
-               // this.cancelar();
-               this.loading=false
+                this.cancelar();
                 this.$router.push('/receitas/' + data.data.idRec)
             })
             .catch(err => {
                 console.log(err)
                 alert('Não foi possível adicionar a nova receita')
-                this.loading=false
-                //this.cancelar();
+                this.cancelar();
             })
             }
         }
