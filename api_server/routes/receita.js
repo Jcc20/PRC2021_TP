@@ -62,14 +62,18 @@ router.get('/', async function(req, res, next) {
     var arr = []
     result.results.bindings.forEach(a => {
         var ing=[]
-        a.igs.value.split('&').forEach(i=>{
-            ing.push(i)
-        })
+        if(a.igs.value){
+            a.igs.value.split('&').forEach(i=>{
+                ing.push(i)
+            })
+        }
         var gostos = []
-        a.gs.value.split('&').forEach(g=>{
-            console.log(g)
-           gostos.push(g.split('#')[1])
-        })
+        if(a.gs.value){
+            a.gs.value.split('&').forEach(g=>{
+                console.log(g)
+               gostos.push(g.split('#')[1])
+            })
+        }
         var obj = {
             "rec_id": a.s.value.split('#')[1],
             "descricao": a.d.value,
@@ -109,14 +113,18 @@ limit 6`
         var arr = []
         result.results.bindings.forEach(a => {
             var ing=[]
-            a.igs.value.split('&').forEach(i=>{
-                ing.push(i)
-            })
+            if(a.igs.value){
+                a.igs.value.split('&').forEach(i=>{
+                    ing.push(i)
+                })
+            }
             var gostos = []
-            a.gs.value.split('&').forEach(g=>{
-                console.log(g)
-               gostos.push(g.split('#')[1])
-            })
+            if(a.gs.value){
+                a.gs.value.split('&').forEach(g=>{
+                    console.log(g)
+                   gostos.push(g.split('#')[1])
+                })
+            }
             var obj = {
                 "rec_id": a.s.value.split('#')[1],
                 "descricao": a.d.value,
@@ -199,13 +207,17 @@ router.get('/:id', async function(req, res, next) {
 
 
         var ing=[]
-        result.results.bindings[0].igs.value.split('&').forEach(i=>{
-            ing.push(i)
-        })
+        if(result.results.bindings[0].igs.value){
+            result.results.bindings[0].igs.value.split('&').forEach(i=>{
+                ing.push(i)
+            })
+        }
         var gostos = []
-        result.results.bindings[0].gs.value.split('&').forEach(g=>{
-           gostos.push(g.split('#')[1])
-        })
+        if(result.results.bindings[0].gs.value){
+            result.results.bindings[0].gs.value.split('&').forEach(g=>{
+               gostos.push(g.split('#')[1])
+            })
+        }
         var obj = {
             "rec_id": req.params.id,
             "descricao": result.results.bindings[0].d.value,

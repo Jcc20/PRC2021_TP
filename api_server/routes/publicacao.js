@@ -144,6 +144,31 @@ router.post('/gostar', async function(req, res, next) {
     
     if(!token || token.email != req.body.idUser) {res.status(403).jsonp({erro: "Não tem acesso à operação."})}
     else{
+       
+        var query = `DELETE DATA
+        {
+            :${req.body.idReceita} :éGostadoPor <http://www.di.uminho.pt/prc2021/PRC2021_Tp#${req.body.idUser}>.
+            <http://www.di.uminho.pt/prc2021/PRC2021_Tp#${req.body.idUser}> :GostaDe  :${req.body.idReceita}.
+        }`
+        console.log(query)
+        try {
+         
+            var resultRel =await gdb.execTransaction(query)
+            console.log(resultRel)
+            
+            res.status(201).jsonp({message:"Gosto removida com sucesso!"})
+        } catch (error) {
+            res.status(500).jsonp({message:"Erro na remoção do gosto! "+ error})
+        }
+    }
+
+});
+
+router.post('/degostar', async function(req, res, next) {
+    var token = verifyToken(req.headers.authorization)
+    
+    if(!token || token.email != req.body.idUser) {res.status(403).jsonp({erro: "Não tem acesso à operação."})}
+    else{
 
         var query = `INSERT 
         {
