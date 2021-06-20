@@ -80,7 +80,7 @@ router.get('/', async function(req, res, next) {
     res.status(201).jsonp({receitas:arr})
 });
 
-router.get('/6recentes', async function(req, res, next) {
+router.get('/recentes', async function(req, res, next) {
     var query = `select ?d ?s ?da ?di ?tc ?tp ?a ?n (GROUP_CONCAT(distinct ?ig;SEPARATOR="&") AS ?igs) ?t (GROUP_CONCAT(distinct ?g;SEPARATOR="&") AS ?gs) where {  ?s rdf:type :Receita.
         ?s :descricao ?d.
         ?s :data ?da.
