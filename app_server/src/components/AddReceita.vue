@@ -162,7 +162,8 @@ export default {
             if (!this.verificaCampos()) this.alerta=true
             else {
             this.alerta=false
-            this.loading=true          
+            this.loading=true    
+                 
             var json={}
             var token = localStorage.getItem('jwt')
             var idUser = jwt.decode(token).email
@@ -170,7 +171,7 @@ export default {
             json['tipoPrato']= this.tipoPrato
             json['dificuldade']= this.dificuldade
             json['titulo']= this.titulo
-            json['descricao']= this.descricao
+            json['descricao']= this.descricao.replace('\n',' ')
             json['ingredientes']= this.select
             json['idUser']= idUser
             json['data']= new Date().toISOString().slice(0, 19).replace('T', ' ')
