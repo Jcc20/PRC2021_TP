@@ -44,7 +44,7 @@
                     </v-col>
                     <v-col cols="12" sm="8">
                         <span style="font-size: 20px; text-decoration: underline"> {{ n.titulo }} <br/> </span>
-                        <span> <b>Receita: </b>{{ n.relativaA }} <br/> </span>
+                        <span> <b>Receita: </b>{{ n.titulo_receita }} <br/> </span>
                         <span> {{ n.creator }} {{ n.data | moment("from") }} </span>
                     </v-col>
                   </v-row>
@@ -86,11 +86,13 @@ export default {
       AddReceita
     },
     created() {                 
-        this.pubs = [
-            {id:"Pub_1",titulo:"O bolo do consolo", creator:"henrique", relativaA:"rec_3", data:"2021-02-17 22:51:13", descricao:"O verão chegou e é sinónimo de praia. Altura de férias, dar uns mergulhos, apanhar sol, descansar e fazer as refeições na areia. No entanto, com as idas à praia é possível que acabe com as marmitas cheias de sanduíches, hambúrgueres e batatas fritas. Por isso, o 24Kitchen selecionou várias receitas de saladas para poder fazer e levar para a praia. Incluímos receitas vegetarianas (V), sem glúten (SG) e vegans (VG) para que todos em casa possam comer e deliciarem-se."},
-            {id:"Pub_2",titulo:"O bolo do consolado", creator:"jose", relativaA:"rec_1", data:"2021-06-17 12:51:13", descricao:"O verão chegou e é sinónimo de praia. Altura de férias, dar uns mergulhos, apanhar sol, descansar e fazer as refeições na areia. No entanto, com as idas à praia é possível que acabe com as marmitas cheias de sanduíches, hambúrgueres e batatas fritas. Por isso, o 24Kitchen selecionou várias receitas de saladas para poder fazer e levar para a praia. Incluímos receitas vegetarianas (V), sem glúten (SG) e vegans (VG) para que todos em casa possam comer e deliciarem-se."},
-            {id:"Pub_3",titulo:"O bolo do conso", creator:"afonso", relativaA:"rec_2", data:"2021-06-18 19:20:13", descricao:"O verão chegou e é sinónimo de praia. Altura de férias, dar uns mergulhos, apanhar sol, descansar e fazer as refeições na areia. No entanto, com as idas à praia é possível que acabe com as marmitas cheias de sanduíches, hambúrgueres e batatas fritas. Por isso, o 24Kitchen selecionou várias receitas de saladas para poder fazer e levar para a praia. Incluímos receitas vegetarianas (V), sem glúten (SG) e vegans (VG) para que todos em casa possam comer e deliciarem-se."}
-            ]
+        axios.get("http://localhost:7700/publicacao/recentes")
+              .then(data => {
+                  this.pubs = data.data.publis
+              })
+              .catch(err => {
+                  console.log(err)
+              })
         axios.get("http://localhost:7700/receita/recentes")
             .then(data => {
                 this.list = data.data.receitas
@@ -98,7 +100,6 @@ export default {
             .catch(err => {
                 console.log(err)
             })          
-        this.pubs = this.sorted(this.pubs)
     },
     methods: {
         handleClick(value) {

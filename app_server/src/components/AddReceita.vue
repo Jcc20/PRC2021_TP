@@ -174,7 +174,9 @@ export default {
             json['descricao']= this.descricao.replaceAll('\n',' ')
             json['ingredientes']= this.select
             json['idUser']= idUser
-            json['data']= new Date().toISOString().slice(0, 19).replace('T', ' ')
+            var x = (new Date()).getTimezoneOffset() * 60000; 
+            var localISOTime = (new Date(Date.now() - x)).toISOString().slice(0,-1);  
+            json['data']= localISOTime.slice(0, 19).replace('T', ' ')
             axios({
                 method: "post",
                 url: "http://localhost:7700/receita/",

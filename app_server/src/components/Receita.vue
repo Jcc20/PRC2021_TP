@@ -167,12 +167,12 @@ export default {
     created() {   
         if (this.token) { 
             this.idUser = jwt.decode(this.token).email
-        }              
+        }   
+       
         axios.get("http://localhost:7700/receita/"+this.$route.params.id)
             .then(data => {
                 console.log(data.data.receita)
                 this.receita = data.data.receita
-                this.receita.data = "2021-04-02 21:30:01"
             })
             .catch(err => {
                 console.log(err)
@@ -192,12 +192,28 @@ export default {
         },
         like(id){
             this.receita.gostos.push(id)
-            //axios 
+            var json={}
+            json['idUser']= id
+            json['idReceita']= this.receita.rec_id
+            axios({
+                method: "post",
+                url: "http://localhost:7700/receita/gostar",
+                data: json,
+                headers: { "Authorization" : this.token},
+            })
         },
         dislike(id) {
             var index = this.receita.gostos.map(function(item) { return item; }).indexOf(id);
             this.receita.gostos.splice(index, 1);
-            //axios 
+            var json={}
+            json['idUser']= id
+            json['idReceita']= this.receita.rec_id
+            axios({
+                method: "post",
+                url: "http://localhost:7700/receita/desgostar",
+                data: json,
+                headers: { "Authorization" : this.token},
+            })
         },
         limpar(){
             this.titulo=''
@@ -205,18 +221,18 @@ export default {
         },
         submitPub(){ 
             var json={}
-            var token = localStorage.getItem('jwt')
-            var idUser = jwt.decode(token).email
             json['titulo']= this.titulo
             json['descricao']= this.pub
-            json['idUser']= idUser
+            json['idUser']= this.idUser
             json['idReceita']= this.receita.rec_id
-            json['data']= new Date().toISOString().slice(0, 19).replace('T', ' ')
+            var x = (new Date()).getTimezoneOffset() * 60000; 
+            var localISOTime = (new Date(Date.now() - x)).toISOString().slice(0,-1);  
+            json['data']= localISOTime.slice(0, 19).replace('T', ' ')
             axios({
                 method: "post",
                 url: "http://localhost:7700/publicacao/",
                 data: json,
-                headers: { "Authorization" : token},
+                headers: { "Authorization" : this.token},
             })
             .then(data => {
                 console.log(data.data)

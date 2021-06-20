@@ -35,6 +35,9 @@
     </v-container>
 
     <v-container class="pa-0">
+        <v-col v-if="this.pubs.length==0" align="center">
+          <p style="font-size:20px"><b>Sem resultados!</b></p>
+        </v-col>
         <v-row no-gutters >
           <v-col v-for="n in pubs" :key="n.id" cols="12" sm="12">
               <!--<v-card class="pa-6 rec" @click="handleClick('/publicacoes/'+n.id)">-->
@@ -87,11 +90,11 @@ export default {
             all: false
         }
     },
-    created() {                 
-        if (this.$route.params.receita) {
-          axios.get("http://localhost:7700/publicacao/receita/"+this.$route.params.receita)
+    created() {     
+         
+        if (this.$route.query.receita) {
+          axios.get("http://localhost:7700/publicacao/receita/"+this.$route.query.receita)
               .then(data => {
-                  console.log(data.data.publis)
                   this.pubs = this.sorted(data.data.publis)
                   this.all = true
               })
@@ -100,10 +103,9 @@ export default {
               })   
         }
         else {
-          axios.get("http://localhost:7700/publicacao/")
+          axios.get("http://localhost:7700/publicacao/recentes")
               .then(data => {
-                  console.log(data.data.publis)
-                  this.pubs = this.sorted(data.data.publis)
+                  this.pubs = data.data.publis
               })
               .catch(err => {
                   console.log(err)
@@ -118,12 +120,21 @@ export default {
           this.$router.push(value)      
         },
         sorted(lista) {
-            return lista.sort((a,b) => (a.data < b.data) ? 1 : ((b.data < a.data) ? -1 : 0))
+            if (lista) return lista.sort((a,b) => (a.data < b.data) ? 1 : ((b.data < a.data) ? -1 : 0))
+            else return lista
         },
         search() {
-            if (this.$route.query.receita) console.log("id: " + this.$route.query.receita)
-            console.log("filtro: " + this.filter)
-            console.log("word: " + this.word)
+            var query = ''
+            if (this.tituloP) query+= (query==''?'':'&') + "tituloP=" + this.tituloP
+            if (this.tituloR) query+= (query==''?'':'&') + "tituloR=" + this.tituloR
+            axios.get("http://localhost:7700/publicacao?"+query)
+                .then(data => {
+                    this.pubs = this.sorted(data.data.publis)
+                    this.all = true
+                })
+                .catch(err => {
+                    console.log(err)
+                })
         },
         removePub(id) {
           if (confirm("Deseja mesmo remover a publicação?")) {
@@ -133,7 +144,6 @@ export default {
         searchAll(){
             axios.get("http://localhost:7700/publicacao/")
                 .then(data => {
-                    console.log(data.data.publis)
                     this.pubs = this.sorted(data.data.publis)
                     this.all = true
                 })

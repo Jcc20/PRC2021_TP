@@ -68,6 +68,9 @@
 
 
             <v-row>
+                <v-col v-if="this.list.length==0" align="center">
+                    <p style="font-size:20px"><b>Sem resultados!</b></p>
+                </v-col>
                 <v-col cols="12"  class="publicacoes">
                       <v-row no-gutters>
                         <v-col v-for="n in list" :key="n.id" cols="12" sm="6">
@@ -170,7 +173,8 @@ export default {
           this.$router.push(value)      
         },
         sorted(lista) {
-            return lista.sort((a,b) => (a.data < b.data) ? 1 : ((b.data < a.data) ? -1 : 0))
+            if (lista) return lista.sort((a,b) => (a.gostos.length < b.gostos.length) ? 1 : ((b.gostos.length < a.gostos.length) ? -1 : 0))
+            else return lista
         },
         search() {
             var query = ''
@@ -179,7 +183,6 @@ export default {
             if (this.chef) query+= (query==''?'':'&') + "autor=" + this.chef.replaceAll(' ','_')
             if (this.titulo) query+= (query==''?'':'&') + "titulo=" + this.titulo
             if (this.ingrediente) query+= (query==''?'':'&') + "ingrediente=" + this.ingrediente
-            console.log("http://localhost:7700/receita?"+query)
             axios.get("http://localhost:7700/receita?"+query)
                 .then(data => {
                     this.list = this.sorted(data.data.receitas)
