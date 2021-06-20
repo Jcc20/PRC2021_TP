@@ -117,8 +117,8 @@ limit 6`
 router.post('/', async function(req, res, next) {
     var rec_id = uuidv4()
     var ing = ""
-    var poped =  req.body.igredientes.pop()
-    req.body.igredientes.forEach(i => {
+    var poped =  req.body.ingredientes.pop()
+    req.body.ingredientes.forEach(i => {
         ing+=i+",\n"
     });
     ing+=poped+";\n"
