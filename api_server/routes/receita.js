@@ -47,9 +47,13 @@ router.get('/', async function(req, res, next) {
         query+=`\n?s :ingrediente ?i.
         FILTER regex (str(?i), "${req.query.ingrediente}", "i").`
     }
+
     if(req.query.autor){
+        while(req.query.autor.includes('_')) {
+            req.query.autor = req.query.autor.replace('_',' ')
+        }
         query+=`\n?s :CriadaPor ?c.
-    	?c :nome "${req.query.autor.replaceAll("_"," ")}".`
+    	?c :nome "${req.query.autor}".`
     }
     query+="} group by ?s ?d ?da ?di ?t ?tc ?tp ?n"
     console.log(query)

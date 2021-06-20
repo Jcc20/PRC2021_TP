@@ -176,7 +176,7 @@ export default {
             var query = ''
             if (this.tipoCozinha) query+= (query==''?'':'&') + "tipoCozinha=" + this.tipoCozinha
             if (this.tipoPrato) query+= (query==''?'':'&') + "tipoPrato=" + this.tipoPrato
-            if (this.chef) query+= (query==''?'':'&') + "autor=" + this.chef
+            if (this.chef) query+= (query==''?'':'&') + "autor=" + this.chef.replaceAll(' ','_')
             if (this.titulo) query+= (query==''?'':'&') + "titulo=" + this.titulo
             if (this.ingrediente) query+= (query==''?'':'&') + "ingrediente=" + this.ingrediente
             console.log("http://localhost:7700/receita?"+query)
