@@ -19,12 +19,12 @@ function verifyToken(token){
 
 
 router.get('/', async function(req, res, next) {
-    var query = `select   ?s ?d ?da ?t ?tr ?a ?n where {  ?s rdf:type :Publicacao.
+    var query = `select  ?r ?s ?d ?da ?t ?tr ?a ?n where {  ?s rdf:type :Publicacao.
         ?s :RelativaA ?r.
         ?s :descricao ?d.
         ?s :data ?da.
    		?s :titulo ?t.
-        ?r  :titulo ?tr.
+        ?r :titulo ?tr.
    		?s :CriadaPor ?a.
         ?a :nome ?n.
        
@@ -47,9 +47,10 @@ router.get('/', async function(req, res, next) {
                 "descricao": a.d.value,
                 "titulo": a.t.value,
                 "data": a.da.value,
-                "titulo_receita": a.tr.value,
                 "autor_id": a.a.value.split('#')[1],
-                "autor": a.n.value
+                "autor": a.n.value,
+                "titulo_receita": a.tr.value,
+                "rec_id": a.r.value.split('#')[1],
             }      
             arr.push(obj)
         });   
