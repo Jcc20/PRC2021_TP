@@ -91,7 +91,7 @@ router.get('/receita/:id', async function(req, res, next) {
             }      
             arr.push(obj)
         });   
-        res.status(201).jsonp({publi:arr})
+        res.status(201).jsonp({publis:arr})
     }else{
         res.status(404).jsonp({message:"Não existem publicações!"})
 
