@@ -55,7 +55,7 @@ router.get('/', async function(req, res, next) {
         }      
         arr.push(obj)
     });   
-    res.status(201).jsonp({publis:arr})  
+    res.status(200).jsonp({publis:arr})  
     
 });
 
@@ -89,7 +89,7 @@ router.get('/receita/:id', async function(req, res, next) {
             }      
             arr.push(obj)
         });   
-        res.status(201).jsonp({publis:arr})
+        res.status(200).jsonp({publis:arr})
     }else{
         res.status(404).jsonp({message:"Não existem publicações!"})
 
@@ -128,67 +128,34 @@ router.get('/recentes', async function(req, res, next) {
             }      
             arr.push(obj)
         });   
-        res.status(201).jsonp({publis:arr})
+        res.status(200).jsonp({publis:arr})
     }else{
         res.status(404).jsonp({message:"Não existem publicações!"})
 
     }
 });
 
-router.post('/degostar', async function(req, res, next) {
-    var token = verifyToken(req.headers.authorization)
-    
-    if(!token || token.email != req.body.idUser) {res.status(403).jsonp({erro: "Não tem acesso à operação."})}
-    else{
-       
-        var query = `DELETE DATA
-        {
-            :${req.body.idReceita} :éGostadoPor <http://www.di.uminho.pt/prc2021/PRC2021_Tp#${req.body.idUser}>.
-            <http://www.di.uminho.pt/prc2021/PRC2021_Tp#${req.body.idUser}> :GostaDe  :${req.body.idReceita}.
-        }`
-        console.log(query)
+router.post('/remover', async function(req, res, next) {
+    var query = `DELETE where {  :${req.body.idPub} rdf:type :Publicacao.
+        :${req.body.idPub} rdf:type owl:NamedIndividual.
+        :${req.body.idPub} :CriadaPor ?a.
+        ?a :Criou :${req.body.idPub}.
+        :${req.body.idPub} :RelativaA ?r.
+        :${req.body.idPub} :data ?da.
+        :${req.body.idPub} :descricao ?d.
+        :${req.body.idPub} :titulo ?tr.
+        }       
+       ` 
+       console.log(query)
         try {
-         
-            var resultRel =await gdb.execTransaction(query)
-            console.log(resultRel)
-            
-            res.status(201).jsonp({message:"Gosto removida com sucesso!"})
+            var result =await gdb.execTransaction(query)
+            res.status(200).jsonp({message:"Publicação removida com sucesso! "})
         } catch (error) {
-            res.status(500).jsonp({message:"Erro na remoção do gosto! "+ error})
+            res.status(500).jsonp({message:"Erro na remoção da publicação! "+ error})
         }
-    }
 
 });
 
-router.post('/gostar', async function(req, res, next) {
-    var token = verifyToken(req.headers.authorization)
-    
-    if(!token || token.email != req.body.idUser) {res.status(403).jsonp({erro: "Não tem acesso à operação."})}
-    else{
-
-        var query = `INSERT 
-        {
-            :${req.body.idReceita} :éGostadoPor ?p.
-            ?p :GostaDe  :${req.body.idReceita}.
-        } 
-        where{
-            ?p rdf:type :Utilizador .
-            FILTER regex (str(?p), "${req.body.idUser}").
-    
-        }`
-        console.log(query)
-        try {
-         
-            var resultRel =await gdb.execTransaction(query)
-            console.log(resultRel)
-            
-            res.status(201).jsonp({message:"Gosto registado com sucesso!"})
-        } catch (error) {
-            res.status(500).jsonp({message:"Erro no registo do gosto! "+ error})
-        }
-    }
-
-});
 
 
 router.post('/', async function(req, res, next) {
@@ -201,7 +168,7 @@ router.post('/', async function(req, res, next) {
         
         var query = `INSERT DATA
         { 
-               :${pub_id} rdf:type :Publicacao;
+               :${pub_id} rdf:type :Publicacao, owl:NamedIndividual;
                         :titulo "${req.body.titulo}" ;
                         :data "${req.body.data}" ;
                         :descricao "${req.body.descricao}".

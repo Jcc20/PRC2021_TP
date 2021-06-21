@@ -88,7 +88,7 @@ router.get('/', async function(req, res, next) {
         }
         arr.push(obj)
     });
-    res.status(201).jsonp({receitas:arr})
+    res.status(200).jsonp({receitas:arr})
 });
 
 router.get('/recentes', async function(req, res, next) {
@@ -139,7 +139,7 @@ limit 6`
             }
             arr.push(obj)
         });
-        res.status(201).jsonp({receitas:arr})
+        res.status(200).jsonp({receitas:arr})
     }
     else{
         res.status(404).jsonp({message:"Receitas não existem!"})
@@ -156,7 +156,7 @@ router.get('/tiposCozinha', async function(req, res, next) {
     result.results.bindings.forEach(a => {
         arr.push(a.p.value)
     });
-    res.status(201).jsonp({tipos:arr})
+    res.status(200).jsonp({tipos:arr})
 });
 
 
@@ -169,7 +169,7 @@ router.get('/tiposPrato', async function(req, res, next) {
     result.results.bindings.forEach(a => {
         arr.push(a.p.value)
     });
-    res.status(201).jsonp({tipos:arr})
+    res.status(200).jsonp({tipos:arr})
 });
 
 
@@ -182,7 +182,7 @@ router.get('/autores', async function(req, res, next) {
     result.results.bindings.forEach(a => {
         arr.push(a.n.value)
     });
-    res.status(201).jsonp({tipos:arr})
+    res.status(200).jsonp({tipos:arr})
 });
 
 router.get('/:id', async function(req, res, next) {
@@ -233,13 +233,146 @@ router.get('/:id', async function(req, res, next) {
         }
         
     
-        res.status(201).jsonp({receita:obj})
+        res.status(200).jsonp({receita:obj})
     }else{
         res.status(404).jsonp({message:"Receita não existe!"})
 
     }
 }); 
 
+router.post('/remover', async function(req, res, next) {
+
+    //var token = verifyToken(req.headers.authorization)
+    
+    //if(!token || token.email != req.body.idUser) {res.status(403).jsonp({erro: "Não tem acesso à operação."})}
+        var id = '<http://www.di.uminho.pt/prc2021/PRC2021_Tp#'+req.body.idRceita+'>'
+        var query = `select  ?d ?da ?di ?tc ?tp ?a ?n (GROUP_CONCAT(distinct ?ig;SEPARATOR="&") AS ?igs) ?t (GROUP_CONCAT(distinct ?g;SEPARATOR="&") AS ?gs) where {  ?s rdf:type :Receita.
+            ${id} :descricao ?d.
+            ${id} :data ?da.
+            ${id} :dificuldade ?di.
+            ${id} :ingrediente ?ig.
+   	    	${id} :titulo ?t.
+            ${id} :tipoCozinha ?tc.
+            ${id} :tipoPrato ?tp.
+            ${id} :CriadaPor ?a.
+            ?a :nome ?n.
+            OPTIONAL {${id} :éGostadoPor ?g.}
+        } group by ?d ?da ?di ?t ?tc ?tp ?a ?n`
+               
+    
+        console.log(query)
+        var result =await gdb.execQuery(query) 
+        /*
+        var ing=[]
+        if(result.results.bindings[0].igs.value){
+            result.results.bindings[0].igs.value.split('&').forEach(i=>{
+                ing.push(i)
+            })
+        }
+        var gostos = []
+        if(result.results.bindings[0].gs.value){
+            result.results.bindings[0].gs.value.split('&').forEach(g=>{
+               gostos.push(g.split('#')[1])
+            })
+        }
+        var obj = {
+            "rec_id": req.params.id,
+            "descricao": result.results.bindings[0].d.value,
+            "ingredientes": ing,
+            "titulo": result.results.bindings[0].t.value,
+            "dificuldade": result.results.bindings[0].di.value,
+            "gostos": gostos,
+            "data": result.results.bindings[0].da.value,
+            "tipoCozinha": result.results.bindings[0].tc.value,
+            "tipoPrato": result.results.bindings[0].tp.value,
+            "autor": result.results.bindings[0].n.value,
+            "autor_id": result.results.bindings[0].a.value.split('#')[1],
+        }*/
+
+
+        var query = `DELETE WHERE
+        {
+            OPTIONAL {:${req.body.idReceita} :éGostadoPor* ?p.}
+            OPTIONAL { ?p :GostaDe*  :${req.body.idReceita}.}
+            OPTIONAL {:${req.body.idReceita} :CriadaPor <http://www.di.uminho.pt/prc2021/PRC2021_Tp#${req.body.idUser}>.}
+            OPTIONAL {<http://www.di.uminho.pt/prc2021/PRC2021_Tp#${req.body.idUser}> :Criou  :${req.body.idReceita}.}
+            :${req.body.idReceita} :data ?d.
+            :${req.body.idReceita} :descricao ?dr.
+            :${req.body.idReceita} :dificuldade ?df.
+            :${req.body.idReceita} :ingrediente* ?i.
+            :${req.body.idReceita} :tipoCozinha ?tc.
+            :${req.body.idReceita} :tipoPrato ?tp.
+            :${req.body.idReceita} :titulo ?tp.
+            
+        }`
+        console.log(query)
+        try {
+         
+            var resultRel =await gdb.execTransaction(query)
+            console.log(resultRel)
+            
+            res.status(200).jsonp({message:"Receita removida com sucesso!"})
+        } catch (error) {
+            res.status(500).jsonp({message:"Erro na remoção da receita! "+ error})
+        }
+    
+
+});
+
+router.post('/desgostar', async function(req, res, next) {
+    var token = verifyToken(req.headers.authorization)
+    
+    if(!token || token.email != req.body.idUser) {res.status(403).jsonp({erro: "Não tem acesso à operação."})}
+    else{
+       
+        var query = `DELETE DATA
+        {
+            :${req.body.idReceita} :éGostadoPor <http://www.di.uminho.pt/prc2021/PRC2021_Tp#${req.body.idUser}>.
+            <http://www.di.uminho.pt/prc2021/PRC2021_Tp#${req.body.idUser}> :GostaDe  :${req.body.idReceita}.
+        }`
+        console.log(query)
+        try {
+         
+            var resultRel =await gdb.execTransaction(query)
+            console.log(resultRel)
+            
+            res.status(200).jsonp({message:"Gosto removida com sucesso!"})
+        } catch (error) {
+            res.status(500).jsonp({message:"Erro na remoção do gosto! "+ error})
+        }
+    }
+
+});
+
+router.post('/gostar', async function(req, res, next) {
+    var token = verifyToken(req.headers.authorization)
+    
+    if(!token || token.email != req.body.idUser) {res.status(403).jsonp({erro: "Não tem acesso à operação."})}
+    else{
+
+        var query = `INSERT 
+        {
+            :${req.body.idReceita} :éGostadoPor ?p.
+            ?p :GostaDe  :${req.body.idReceita}.
+        } 
+        where{
+            ?p rdf:type :Utilizador .
+            FILTER regex (str(?p), "${req.body.idUser}").
+    
+        }`
+        console.log(query)
+        try {
+         
+            var resultRel =await gdb.execTransaction(query)
+            console.log(resultRel)
+            
+            res.status(201).jsonp({message:"Gosto registado com sucesso!"})
+        } catch (error) {
+            res.status(500).jsonp({message:"Erro no registo do gosto! "+ error})
+        }
+    }
+
+});
 
 router.post('/', async function(req, res, next) {
     var token = verifyToken(req.headers.authorization)
@@ -257,7 +390,7 @@ router.post('/', async function(req, res, next) {
         console.log(ing)
         var query = `INSERT DATA
         { 
-               :${rec_id} rdf:type :Receita;
+               :${rec_id} rdf:type :Receita, owl:NamedIndividual;
                         :titulo "${req.body.titulo}" ;
                         :data "${req.body.data}" ;
                         :descricao "${req.body.descricao}";
