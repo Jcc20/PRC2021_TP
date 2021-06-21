@@ -136,24 +136,28 @@ router.get('/recentes', async function(req, res, next) {
 });
 
 router.post('/remover', async function(req, res, next) {
-    var query = `DELETE where {  :${req.body.idPub} rdf:type :Publicacao.
-        :${req.body.idPub} rdf:type owl:NamedIndividual.
-        :${req.body.idPub} :CriadaPor ?a.
-        ?a :Criou :${req.body.idPub}.
-        :${req.body.idPub} :RelativaA ?r.
-        :${req.body.idPub} :data ?da.
-        :${req.body.idPub} :descricao ?d.
-        :${req.body.idPub} :titulo ?tr.
-        }       
-       ` 
-       console.log(query)
+    var token = verifyToken(req.headers.authorization)
+   
+    if(!token || token.email != req.body.idUser) {res.status(403).jsonp({erro: "Não tem acesso à operação."})}
+    else{
+        var query = `DELETE where {  :${req.body.idPub} rdf:type :Publicacao.
+            :${req.body.idPub} rdf:type owl:NamedIndividual.
+            :${req.body.idPub} :CriadaPor ?a.
+            ?a :Criou :${req.body.idPub}.
+            :${req.body.idPub} :RelativaA ?r.
+            :${req.body.idPub} :data ?da.
+            :${req.body.idPub} :descricao ?d.
+            :${req.body.idPub} :titulo ?tr.
+            }       
+           ` 
+        console.log(query)
         try {
             var result =await gdb.execTransaction(query)
             res.status(200).jsonp({message:"Publicação removida com sucesso! "})
         } catch (error) {
             res.status(500).jsonp({message:"Erro na remoção da publicação! "+ error})
         }
-
+    }
 });
 
 
