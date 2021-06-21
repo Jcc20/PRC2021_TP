@@ -242,69 +242,62 @@ router.get('/:id', async function(req, res, next) {
 
 router.post('/remover', async function(req, res, next) {
 
-    //var token = verifyToken(req.headers.authorization)
+    var token = verifyToken(req.headers.authorization)
     
-    //if(!token || token.email != req.body.idUser) {res.status(403).jsonp({erro: "Não tem acesso à operação."})}
-        var id = '<http://www.di.uminho.pt/prc2021/PRC2021_Tp#'+req.body.idRceita+'>'
-        var query = `select  ?d ?da ?di ?tc ?tp ?a ?n (GROUP_CONCAT(distinct ?ig;SEPARATOR="&") AS ?igs) ?t (GROUP_CONCAT(distinct ?g;SEPARATOR="&") AS ?gs) where {  ?s rdf:type :Receita.
-            ${id} :descricao ?d.
-            ${id} :data ?da.
-            ${id} :dificuldade ?di.
-            ${id} :ingrediente ?ig.
-   	    	${id} :titulo ?t.
-            ${id} :tipoCozinha ?tc.
-            ${id} :tipoPrato ?tp.
-            ${id} :CriadaPor ?a.
-            ?a :nome ?n.
-            OPTIONAL {${id} :éGostadoPor ?g.}
-        } group by ?d ?da ?di ?t ?tc ?tp ?a ?n`
-               
-    
-        console.log(query)
-        var result =await gdb.execQuery(query) 
-        /*
-        var ing=[]
-        if(result.results.bindings[0].igs.value){
-            result.results.bindings[0].igs.value.split('&').forEach(i=>{
-                ing.push(i)
-            })
+    if(!token || token.email != req.body.idUser) {res.status(403).jsonp({erro: "Não tem acesso à operação."})}
+    else{
+        var query1 =`select ?idpub where{
+            ?idpub :RelativaA :${req.body.idReceita}.
+        }`
+        console.log(query1)
+        var result =await gdb.execQuery(query1) 
+        //apagar pubs se tiver
+        if(result.results.bindings[0]){
+            result.results.bindings.forEach(async (e) => {
+                var queryAux = `DELETE where {  :${e.idpub.value.split('#')[1]} rdf:type :Publicacao.
+                :${e.idpub.value.split('#')[1]} rdf:type owl:NamedIndividual.
+                :${e.idpub.value.split('#')[1]} :CriadaPor ?a.
+                ?a :Criou :${e.idpub.value.split('#')[1]}.
+                :${e.idpub.value.split('#')[1]} :RelativaA ?r.
+                :${e.idpub.value.split('#')[1]} :data ?da.
+                :${e.idpub.value.split('#')[1]} :descricao ?d.
+                :${e.idpub.value.split('#')[1]} :titulo ?tr.
+                }       
+               ` 
+                console.log(queryAux)
+                var resultAux = await gdb.execTransaction(queryAux)
+                
+            });
         }
-        var gostos = []
-        if(result.results.bindings[0].gs.value){
-            result.results.bindings[0].gs.value.split('&').forEach(g=>{
-               gostos.push(g.split('#')[1])
-            })
-        }
-        var obj = {
-            "rec_id": req.params.id,
-            "descricao": result.results.bindings[0].d.value,
-            "ingredientes": ing,
-            "titulo": result.results.bindings[0].t.value,
-            "dificuldade": result.results.bindings[0].di.value,
-            "gostos": gostos,
-            "data": result.results.bindings[0].da.value,
-            "tipoCozinha": result.results.bindings[0].tc.value,
-            "tipoPrato": result.results.bindings[0].tp.value,
-            "autor": result.results.bindings[0].n.value,
-            "autor_id": result.results.bindings[0].a.value.split('#')[1],
-        }*/
-
 
         var query = `DELETE WHERE
         {
-            OPTIONAL {:${req.body.idReceita} :éGostadoPor* ?p.}
-            OPTIONAL { ?p :GostaDe*  :${req.body.idReceita}.}
-            OPTIONAL {:${req.body.idReceita} :CriadaPor <http://www.di.uminho.pt/prc2021/PRC2021_Tp#${req.body.idUser}>.}
-            OPTIONAL {<http://www.di.uminho.pt/prc2021/PRC2021_Tp#${req.body.idUser}> :Criou  :${req.body.idReceita}.}
+            :${req.body.idReceita} :CriadaPor <http://www.di.uminho.pt/prc2021/PRC2021_Tp#${req.body.idUser}>.
+            <http://www.di.uminho.pt/prc2021/PRC2021_Tp#${req.body.idUser}> :Criou  :${req.body.idReceita}.
             :${req.body.idReceita} :data ?d.
             :${req.body.idReceita} :descricao ?dr.
             :${req.body.idReceita} :dificuldade ?df.
-            :${req.body.idReceita} :ingrediente* ?i.
+            :${req.body.idReceita} :ingrediente ?i.
             :${req.body.idReceita} :tipoCozinha ?tc.
             :${req.body.idReceita} :tipoPrato ?tp.
-            :${req.body.idReceita} :titulo ?tp.
+            :${req.body.idReceita} :titulo ?t.
+            :${req.body.idReceita} rdf:type :Receita.
+            :${req.body.idReceita} rdf:type owl:NamedIndividual.
             
+        `
+
+        var query2 =`select ?g where{
+            :${req.body.idReceita} :éGostadoPor ?g.
         }`
+        console.log(query2)
+        var result2 =await gdb.execQuery(query2) 
+
+        if(result2.results.bindings[0]){
+            query+=`:${req.body.idReceita} :éGostadoPor ?p.
+            ?p :GostaDe :${req.body.idReceita}.`
+        }
+        query+="}"
+
         console.log(query)
         try {
          
@@ -315,7 +308,7 @@ router.post('/remover', async function(req, res, next) {
         } catch (error) {
             res.status(500).jsonp({message:"Erro na remoção da receita! "+ error})
         }
-    
+    }
 
 });
 
