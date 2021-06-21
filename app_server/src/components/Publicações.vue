@@ -50,7 +50,7 @@
                       <v-row class="pa-2">
                         <b style="font-size: 24px;"> {{ n.titulo }}</b> 
                         <v-spacer></v-spacer>
-                        <v-icon v-if="idUser==n.autor_id" color="red" @click="removePub(n.id)"> mdi-close </v-icon>
+                        <v-icon v-if="idUser==n.autor_id" color="red" @click="removePub(n.pub_id)"> mdi-close </v-icon>
                       </v-row>
                     <br/> 
                     <span  style="cursor:pointer" @click="handleClick('/receitas/'+n.rec_id)"> <b>Receita: </b> {{ n.titulo_receita }}  <br/> </span> <br/> 
@@ -90,8 +90,10 @@ export default {
             all: false
         }
     },
-    created() {     
-         
+    created() {  
+        if (this.token) { 
+            this.idUser = jwt.decode(this.token).email
+        }   
         if (this.$route.query.receita) {
           axios.get("http://localhost:7700/publicacao/receita/"+this.$route.query.receita)
               .then(data => {
@@ -111,9 +113,6 @@ export default {
                   console.log(err)
               })   
         }  
-        if (this.token) { 
-            this.idUser = jwt.decode(this.token).email
-        }
     },
     methods: {
         handleClick(value) {
@@ -138,7 +137,23 @@ export default {
         },
         removePub(id) {
           if (confirm("Deseja mesmo remover a publicação?")) {
-            console.log("remover " + id)
+            var json={}
+            json['idPub']= id
+            json['idUser']= this.idUser
+            axios({
+                method: "post",
+                url: "http://localhost:7700/publicacao/remover",
+                data: json,
+                headers: { "Authorization" : this.token},
+            })
+            .then(() => {
+                this.$router.go()
+            })
+            .catch(err => {
+                console.log(err)
+                alert('Não foi possível remover a publicação')
+            })
+
           }
         },
         searchAll(){

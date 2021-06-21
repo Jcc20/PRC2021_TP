@@ -171,7 +171,6 @@ export default {
        
         axios.get("http://localhost:7700/receita/"+this.$route.params.id)
             .then(data => {
-                console.log(data.data.receita)
                 this.receita = data.data.receita
             })
             .catch(err => {
@@ -184,7 +183,22 @@ export default {
         },
         removeReceita(id) {
           if (confirm("Deseja mesmo remover a receita?")) {
-            console.log("remover " + id)
+            var json={}
+            json['idRec']= id
+            json['idUser']= this.idUser
+            axios({
+                method: "post",
+                url: "http://localhost:7700/receita/remover",
+                data: json,
+                headers: { "Authorization" : this.token},
+            })
+            .then(() => {
+                this.$router.push('/')
+            })
+            .catch(err => {
+                console.log(err)
+                alert('Não foi possível remover a receita')
+            })
           }
         },
         sorted(lista) {
@@ -234,8 +248,7 @@ export default {
                 data: json,
                 headers: { "Authorization" : this.token},
             })
-            .then(data => {
-                console.log(data.data)
+            .then(() => {
                 this.limpar();
                 alert('Publicação foi adicionada com sucesso!')
             })
