@@ -58,10 +58,13 @@
                     ></v-select>
                 </v-col>
 
-                <v-col class="d-flex pa-2" cols="12" sm="2">
-                    <v-btn @click="search()"> Procurar 
+                <v-col class="d-flex pa-2" cols="12" sm="1">
+                    <v-btn @click="search()">
                         <v-icon> mdi-magnify </v-icon>
                     </v-btn>
+                </v-col>
+                <v-col class="d-flex pa-2" cols="12" sm="1" style="margin-left:-15px">
+                    <AddReceita :button="true"/>
                 </v-col>
             
             </v-row>
@@ -119,6 +122,7 @@
 
 <script>
 import axios from 'axios'
+import AddReceita from '@/components/AddReceita.vue'
 
 export default {
     name: 'receitasSearch',
@@ -167,6 +171,9 @@ export default {
                 console.log(err)
             })     
         
+    },
+    components: {
+        AddReceita
     },
     methods: {
         handleClick(value) {

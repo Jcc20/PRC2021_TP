@@ -2,7 +2,10 @@
     <div id="addRecurso">
         <v-dialog max-width="900px" v-model="show">
             <template v-slot:activator="{ on }">
-               <v-btn v-on="on"> Nova receita </v-btn>
+                 <v-btn v-if="button" v-on="on" @click="search()">
+                    <v-icon> mdi-plus </v-icon>
+                </v-btn>
+                <v-btn v-else v-on="on"> Nova receita </v-btn>
             </template>
             <v-card >
                 <v-card-text >                   
@@ -122,6 +125,9 @@ export default {
     created(){
         this.tiposCozinha = this.sorted(this.tiposCozinha)
         this.tiposPrato = this.sorted(this.tiposPrato)
+    },
+    props: {
+        button: Boolean
     },
     methods: {
         cancelar() {

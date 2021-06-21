@@ -6,9 +6,9 @@
           <v-img
           @click="goToLink('/')"
           class="logo"
-          max-height="45"
+          max-height="40"
           style="cursor:pointer"
-          max-width="490"
+          max-width="210"
           src="../assets/mfc.png"
           ></v-img>
             <v-toolbar-items>
@@ -34,9 +34,9 @@
           <v-img
           @click="goToLink('/')"
           class="logo"
+          max-height="40"
           style="cursor:pointer"
-          max-height="45"
-          max-width="490"
+          max-width="210"
           src="../assets/mfc.png"
           ></v-img>
             <v-toolbar-items>
