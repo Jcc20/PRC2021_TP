@@ -184,8 +184,10 @@ export default {
         removeReceita(id) {
           if (confirm("Deseja mesmo remover a receita?")) {
             var json={}
-            json['idRec']= id
+            json['idReceita']= id
             json['idUser']= this.idUser
+            console.log(id)
+            console.log(this.idUser)
             axios({
                 method: "post",
                 url: "http://localhost:7700/receita/remover",
