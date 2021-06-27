@@ -67,6 +67,10 @@
 :email rdf:type owl:DatatypeProperty .
 
 
+###  http://www.di.uminho.pt/prc2021/PRC2021_Tp#imgPath
+:imgPath rdf:type owl:DatatypeProperty .
+
+
 ###  http://www.di.uminho.pt/prc2021/PRC2021_Tp#ingrediente
 :ingrediente rdf:type owl:DatatypeProperty .
 
