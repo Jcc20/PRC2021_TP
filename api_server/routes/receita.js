@@ -20,7 +20,7 @@ function verifyToken(token){
 
 
 router.get('/', async function(req, res, next) {
-    var query = `select  ?s ?d ?da ?di ?tc ?tp ?n (GROUP_CONCAT(distinct ?ig;SEPARATOR="&") AS ?igs) ?t (GROUP_CONCAT(distinct ?g;SEPARATOR="&") AS ?gs) where {  ?s rdf:type :Receita.
+    var query = `select ?img ?s ?d ?da ?di ?tc ?tp ?n (GROUP_CONCAT(distinct ?ig;SEPARATOR="&") AS ?igs) ?t (GROUP_CONCAT(distinct ?g;SEPARATOR="&") AS ?gs) where {  ?s rdf:type :Receita.
         ?s :descricao ?d.
         ?s :data ?da.
         ?s :dificuldade ?di.
@@ -30,7 +30,7 @@ router.get('/', async function(req, res, next) {
         ?s :tipoPrato ?tp.
         ?s :CriadaPor ?a.
         ?a :nome ?n.
-        
+        ?s :imgPath ?img.
         OPTIONAL {?s :éGostadoPor ?g.}`
            
     if(req.query.titulo){
@@ -55,8 +55,8 @@ router.get('/', async function(req, res, next) {
         query+=`\n?s :CriadaPor ?c.
     	?c :nome "${req.query.autor}".`
     }
-    query+="} group by ?s ?d ?da ?di ?t ?tc ?tp ?n"
-    console.log(query)
+    query+="} group by ?s ?d ?da ?di ?t ?tc ?tp ?n ?img"
+
     var result =await gdb.execQuery(query)
 
     var arr = []
@@ -70,7 +70,6 @@ router.get('/', async function(req, res, next) {
         var gostos = []
         if(a.gs.value){
             a.gs.value.split('&').forEach(g=>{
-                console.log(g)
                gostos.push(g.split('#')[1])
             })
         }
@@ -84,7 +83,8 @@ router.get('/', async function(req, res, next) {
             "data": a.da.value,
             "tipoCozinha": a.tc.value,
             "tipoPrato": a.tp.value,
-            "autor": a.n.value
+            "autor": a.n.value,
+            "imgPath": a.img.value
         }
         arr.push(obj)
     });
@@ -92,7 +92,7 @@ router.get('/', async function(req, res, next) {
 });
 
 router.get('/recentes', async function(req, res, next) {
-    var query = `select ?d ?s ?da ?di ?tc ?tp ?a ?n (GROUP_CONCAT(distinct ?ig;SEPARATOR="&") AS ?igs) ?t (GROUP_CONCAT(distinct ?g;SEPARATOR="&") AS ?gs) where {  ?s rdf:type :Receita.
+    var query = `select ?img ?d ?s ?da ?di ?tc ?tp ?a ?n (GROUP_CONCAT(distinct ?ig;SEPARATOR="&") AS ?igs) ?t (GROUP_CONCAT(distinct ?g;SEPARATOR="&") AS ?gs) where {  ?s rdf:type :Receita.
         ?s :descricao ?d.
         ?s :data ?da.
         ?s :dificuldade ?di.
@@ -102,9 +102,10 @@ router.get('/recentes', async function(req, res, next) {
         ?s :tipoPrato ?tp.
         ?s :CriadaPor ?a.
         ?a :nome ?n.
+        ?s :imgPath ?img.
         OPTIONAL {?s :éGostadoPor ?g.}
     } 
-group by ?d ?s ?da ?di ?t ?tc ?tp ?a ?n
+group by ?d ?s ?da ?di ?t ?tc ?tp ?a ?n ?img
 order by desc(?da)
 limit 6`
     var result =await gdb.execQuery(query)
@@ -121,7 +122,6 @@ limit 6`
             var gostos = []
             if(a.gs.value){
                 a.gs.value.split('&').forEach(g=>{
-                    console.log(g)
                    gostos.push(g.split('#')[1])
                 })
             }
@@ -135,7 +135,8 @@ limit 6`
                 "data": a.da.value,
                 "tipoCozinha": a.tc.value,
                 "tipoPrato": a.tp.value,
-                "autor": a.n.value
+                "autor": a.n.value,
+                "imgPath": a.img.value
             }
             arr.push(obj)
         });
@@ -185,9 +186,11 @@ router.get('/autores', async function(req, res, next) {
     res.status(200).jsonp({tipos:arr})
 });
 
+
+
 router.get('/:id', async function(req, res, next) {
     var id = '<http://www.di.uminho.pt/prc2021/PRC2021_Tp#'+req.params.id+'>'
-    var query = `select  ?d ?da ?di ?tc ?tp ?a ?n (GROUP_CONCAT(distinct ?ig;SEPARATOR="&") AS ?igs) ?t (GROUP_CONCAT(distinct ?g;SEPARATOR="&") AS ?gs) where {  ?s rdf:type :Receita.
+    var query = `select ?img ?d ?da ?di ?tc ?tp ?a ?n (GROUP_CONCAT(distinct ?ig;SEPARATOR="&") AS ?igs) ?t (GROUP_CONCAT(distinct ?g;SEPARATOR="&") AS ?gs) where {  ?s rdf:type :Receita.
         ${id} :descricao ?d.
         ${id} :data ?da.
         ${id} :dificuldade ?di.
@@ -196,12 +199,12 @@ router.get('/:id', async function(req, res, next) {
         ${id} :tipoCozinha ?tc.
         ${id} :tipoPrato ?tp.
         ${id} :CriadaPor ?a.
+        ${id} :imgPath ?img.
         ?a :nome ?n.
         OPTIONAL {${id} :éGostadoPor ?g.}
-    } group by ?d ?da ?di ?t ?tc ?tp ?a ?n`
+    } group by ?d ?da ?di ?t ?tc ?tp ?a ?n ?img`
            
 
-    console.log(query)
     var result =await gdb.execQuery(query)
     if(result.results.bindings[0]){
 
@@ -229,6 +232,7 @@ router.get('/:id', async function(req, res, next) {
             "tipoCozinha": result.results.bindings[0].tc.value,
             "tipoPrato": result.results.bindings[0].tp.value,
             "autor": result.results.bindings[0].n.value,
+            "imgPath": result.results.bindings[0].img.value,
             "autor_id": result.results.bindings[0].a.value.split('#')[1],
         }
         
@@ -249,7 +253,6 @@ router.post('/remover', async function(req, res, next) {
         var query1 =`select ?idpub where{
             ?idpub :RelativaA :${req.body.idReceita}.
         }`
-        console.log(query1)
         var result =await gdb.execQuery(query1) 
         //apagar pubs se tiver
         if(result.results.bindings[0]){
@@ -264,8 +267,7 @@ router.post('/remover', async function(req, res, next) {
                 :${e.idpub.value.split('#')[1]} :titulo ?tr.
                 }       
                ` 
-                console.log(queryAux)
-                var resultAux = await gdb.execTransaction(queryAux)
+                await gdb.execTransaction(queryAux)
                 
             });
         }
@@ -281,6 +283,7 @@ router.post('/remover', async function(req, res, next) {
             :${req.body.idReceita} :tipoCozinha ?tc.
             :${req.body.idReceita} :tipoPrato ?tp.
             :${req.body.idReceita} :titulo ?t.
+            :${req.body.idReceita} :imgPath ?img.
             :${req.body.idReceita} rdf:type :Receita.
             :${req.body.idReceita} rdf:type owl:NamedIndividual.
             
@@ -289,7 +292,7 @@ router.post('/remover', async function(req, res, next) {
         var query2 =`select ?g where{
             :${req.body.idReceita} :éGostadoPor ?g.
         }`
-        console.log(query2)
+
         var result2 =await gdb.execQuery(query2) 
 
         if(result2.results.bindings[0]){
@@ -298,12 +301,8 @@ router.post('/remover', async function(req, res, next) {
         }
         query+="}"
 
-        console.log(query)
         try {
-         
-            var resultRel =await gdb.execTransaction(query)
-            console.log(resultRel)
-            
+            await gdb.execTransaction(query)
             res.status(200).jsonp({message:"Receita removida com sucesso!"})
         } catch (error) {
             res.status(500).jsonp({message:"Erro na remoção da receita! "+ error})
@@ -323,12 +322,8 @@ router.post('/desgostar', async function(req, res, next) {
             :${req.body.idReceita} :éGostadoPor <http://www.di.uminho.pt/prc2021/PRC2021_Tp#${req.body.idUser}>.
             <http://www.di.uminho.pt/prc2021/PRC2021_Tp#${req.body.idUser}> :GostaDe  :${req.body.idReceita}.
         }`
-        console.log(query)
         try {
-         
-            var resultRel =await gdb.execTransaction(query)
-            console.log(resultRel)
-            
+            await gdb.execTransaction(query)            
             res.status(200).jsonp({message:"Gosto removida com sucesso!"})
         } catch (error) {
             res.status(500).jsonp({message:"Erro na remoção do gosto! "+ error})
@@ -353,12 +348,9 @@ router.post('/gostar', async function(req, res, next) {
             FILTER regex (str(?p), "${req.body.idUser}").
     
         }`
-        console.log(query)
+
         try {
-         
-            var resultRel =await gdb.execTransaction(query)
-            console.log(resultRel)
-            
+            await gdb.execTransaction(query)
             res.status(201).jsonp({message:"Gosto registado com sucesso!"})
         } catch (error) {
             res.status(500).jsonp({message:"Erro no registo do gosto! "+ error})
@@ -367,20 +359,33 @@ router.post('/gostar', async function(req, res, next) {
 
 });
 
-router.post('/', async function(req, res, next) {
+var multer  = require('multer')
+var fileName;
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './public/uploads/')
+  },
+  filename: function (req, file, cb) {
+      fileName = Date.now() + '-' + file.originalname
+      cb(null, fileName)
+  }
+})
+ 
+var upload = multer({ storage: storage })
+
+router.post('/', upload.single('file'), async function(req, res, next) {
     var token = verifyToken(req.headers.authorization)
     if(!token || token.email != req.body.idUser) {res.status(403).jsonp({erro: "Não tem acesso à operação."})}
     else{
-
         var rec_id = uuidv4()
         var ing = ""
-        var poped =  req.body.ingredientes.pop()
-        req.body.ingredientes.forEach(i => {
+        var ingredientes = req.body.ingredientes.split(",")
+        var poped =  ingredientes.pop()
+        ingredientes.forEach(i => {
             ing+='"'+i+'"'+",\n"
         });
         ing+='"'+poped+'"'+";\n"
     
-        console.log(ing)
         var query = `INSERT DATA
         { 
                :${rec_id} rdf:type :Receita, owl:NamedIndividual;
@@ -390,9 +395,9 @@ router.post('/', async function(req, res, next) {
                         :ingrediente ${ing}
                         :dificuldade "${req.body.dificuldade}";
                         :tipoCozinha "${req.body.tipoCozinha}";
+                        :imgPath "${fileName}";
                         :tipoPrato "${req.body.tipoPrato}".
         }`
-        console.log(query)
         var queryRel = `INSERT 
         {
             :${rec_id} :CriadaPor ?p.
@@ -402,16 +407,12 @@ router.post('/', async function(req, res, next) {
             ?p rdf:type :Utilizador .
             FILTER regex (str(?p), "${req.body.idUser}").
         }`
-        console.log(queryRel)
         try {
-            var result =await gdb.execTransaction(query)
-            console.log(result)
-            var resultRel =await gdb.execTransaction(queryRel)
-            console.log(resultRel)
-            
+            await gdb.execTransaction(query)
+            await gdb.execTransaction(queryRel)  
             res.status(201).jsonp({message:"Receita registada com sucesso!", idRec: rec_id})
         } catch (error) {
-            res.status(500).jsonp({message:"Erro no registo da receita! "+ error})
+            res.status(500).jsonp({message:"Erro no registo da receita! ", error})
         }
     }
 

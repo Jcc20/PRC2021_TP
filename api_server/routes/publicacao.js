@@ -19,12 +19,13 @@ function verifyToken(token){
 
 
 router.get('/', async function(req, res, next) {
-    var query = `select  ?r ?s ?d ?da ?t ?tr ?a ?n where {  ?s rdf:type :Publicacao.
+    var query = `select ?img ?r ?s ?d ?da ?t ?tr ?a ?n where {  ?s rdf:type :Publicacao.
         ?s :RelativaA ?r.
         ?s :descricao ?d.
         ?s :data ?da.
    		?s :titulo ?t.
         ?r :titulo ?tr.
+        ?r :imgPath ?img.
    		?s :CriadaPor ?a.
         ?a :nome ?n.
        
@@ -37,7 +38,7 @@ router.get('/', async function(req, res, next) {
         query+=`\nFILTER regex (str(?tr), "${req.query.tituloR}", "i").`
     }
     query+="}"
-    console.log(query)
+
     var result =await gdb.execQuery(query)
 
     var arr = []
@@ -51,6 +52,7 @@ router.get('/', async function(req, res, next) {
             "autor_id": a.a.value.split('#')[1],
             "autor": a.n.value,
             "titulo_receita": a.tr.value,
+            "imgPath": a.img.value,
             "rec_id": a.r.value.split('#')[1]
         }      
         arr.push(obj)
@@ -60,18 +62,18 @@ router.get('/', async function(req, res, next) {
 });
 
 router.get('/receita/:id', async function(req, res, next) {
-    var query = `select   ?s ?d ?da ?t ?tr ?a ?n where {  ?s rdf:type :Publicacao.
+    var query = `select ?img ?s ?d ?da ?t ?tr ?a ?n where {  ?s rdf:type :Publicacao.
         ?s :RelativaA :${req.params.id}.
         ?s :descricao ?d.
         ?s :data ?da.
    		?s :titulo ?t.
         :${req.params.id}  :titulo ?tr.
+        :${req.params.id}  :imgPath ?img.
    		?s :CriadaPor ?a.
         ?a :nome ?n.
        }
        `
-        
-    console.log(query)
+
     var result =await gdb.execQuery(query)
 
     var arr = []
@@ -85,6 +87,7 @@ router.get('/receita/:id', async function(req, res, next) {
                 "titulo_receita": a.tr.value,
                 "autor_id": a.a.value.split('#')[1],
                 "autor": a.n.value,
+                "imgPath": a.img.value,
                 "rec_id": req.params.id
             }      
             arr.push(obj)
@@ -98,9 +101,10 @@ router.get('/receita/:id', async function(req, res, next) {
 
 
 router.get('/recentes', async function(req, res, next) {
-    var query = `select ?r ?s ?d ?da ?t ?tr ?a ?n where {  ?s rdf:type :Publicacao.
+    var query = `select ?img ?r ?s ?d ?da ?t ?tr ?a ?n where {  ?s rdf:type :Publicacao.
         ?s :RelativaA ?r.
         ?r :titulo ?tr.
+        ?r :imgPath ?img.
         ?s :descricao ?d.
         ?s :data ?da.
    		?s :titulo ?t.
@@ -124,7 +128,8 @@ router.get('/recentes', async function(req, res, next) {
                 "titulo_receita": a.tr.value,
                 "rec_id": a.r.value.split('#')[1],
                 "autor_id": a.a.value.split('#')[1],
-                "autor": a.n.value
+                "autor": a.n.value,
+                "imgPath": a.img.value
             }      
             arr.push(obj)
         });   
@@ -150,9 +155,8 @@ router.post('/remover', async function(req, res, next) {
             :${req.body.idPub} :titulo ?tr.
             }       
            ` 
-        console.log(query)
         try {
-            var result =await gdb.execTransaction(query)
+            await gdb.execTransaction(query)
             res.status(200).jsonp({message:"Publicação removida com sucesso! "})
         } catch (error) {
             res.status(500).jsonp({message:"Erro na remoção da publicação! "+ error})
@@ -178,7 +182,6 @@ router.post('/', async function(req, res, next) {
                         :descricao "${req.body.descricao}".
                        
         }`
-        console.log(query)
         var queryRel = `INSERT 
         {
             :${pub_id} :CriadaPor ?p.
@@ -193,12 +196,12 @@ router.post('/', async function(req, res, next) {
             ?r rdf:type :Receita .
             FILTER regex (str(?r), "${req.body.idReceita}").
         }`
-        console.log(queryRel)
+
         try {
-            var result =await gdb.execTransaction(query)
-            console.log(result)
-            var resultRel =await gdb.execTransaction(queryRel)
-            console.log(resultRel)
+            await gdb.execTransaction(query)
+
+            await gdb.execTransaction(queryRel)
+
             
             res.status(201).jsonp({message:"Publicação registada com sucesso!", idPub: pub_id})
         } catch (error) {

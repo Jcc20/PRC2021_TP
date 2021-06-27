@@ -3,7 +3,8 @@
         <v-container v-if="receita"> 
             <v-row>
                 <v-col>
-                    <v-img max-height="600px" src="../../public/default.png"></v-img>
+                    <v-img max-height="600px" v-if="n.imgPath" :src="'http://localhost:7700/uploads/'+n.imgPath"></v-img>
+                    <v-img max-height="600px" v-else src="../../public/default.png"></v-img>
                 </v-col>
             </v-row>   
             <v-row align="center" >

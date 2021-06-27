@@ -84,8 +84,18 @@
                             outlined
                             ></v-textarea>
                         </v-col>
-
-                        
+                          
+                        <v-col class="pa-2">
+                            <v-file-input
+                              label="Adicione uma imagem"
+                              v-model="img"
+                              name="avatar"
+                              single
+                              accept="image/*"
+                              prepend-icon="mdi-camera"
+                            ></v-file-input>
+                        </v-col>
+                       
                         <v-col align="right">
                           <v-btn :loading="loading" v-ripple="{ class: 'primary--text' }" width="150" style="height:40px" class="white--text" elevation="1" v-on:click="submeter()" color="#00ace6">Submeter</v-btn>
                           <v-btn v-ripple="{ class: 'primary--text' }" width="150" style="margin-left:10px;height:40px" class="white--text" elevation="1" v-on:click="cancelar()" color="#527a7a">Cancelar</v-btn>
@@ -108,6 +118,7 @@ export default {
     data() {
         return{
           show:false,
+          img:null,
           search: "",
           select: [],
           tiposCozinha: ["Austríaca","Belga","Brasileira","Madeirense","Tailandesa","Macaense","Ucraniana","Africana","Mexicana","Espanhola","Suiça","Holandesa","Mediterrânica","Americana","Asiática","Inglesa","América do Sul","Francesa","Grega","Indiana","Árabe","Portuguesa","Marroquina","Chinesa","Italiana"],
@@ -139,6 +150,7 @@ export default {
             this.select = [],
             this.search = '',
             this.dificuldade = '',
+            this.img = null,
             this.loading=false
         },
         sorted(lista) {
@@ -155,12 +167,16 @@ export default {
             });
           });
         },
+        handleFileUpload(){
+        this.img = this.$refs.file.files[0];
+        },
         verificaCampos() {
             if (this.tiposCozinha=='') return false
             if (this.tiposPrato=='') return false
             if (this.dificuldade=='') return false
             if (this.titulo=='') return false
             if (this.descricao=='') return false
+            if (this.img==null) return false
             if (this.select==[]) return false
             return true
         },
@@ -170,24 +186,28 @@ export default {
             this.alerta=false
             this.loading=true    
                  
-            var json={}
+            let formData = new FormData();
             var token = localStorage.getItem('jwt')
             var idUser = jwt.decode(token).email
-            json['tipoCozinha']= this.tipoCozinha
-            json['tipoPrato']= this.tipoPrato
-            json['dificuldade']= this.dificuldade
-            json['titulo']= this.titulo
-            json['descricao']= this.descricao.replaceAll('\n',' ')
-            json['ingredientes']= this.select
-            json['idUser']= idUser
+            formData.append('tipoCozinha', this.tipoCozinha);
+            formData.append('tipoPrato', this.tipoPrato);
+            formData.append('dificuldade', this.dificuldade);
+            formData.append('titulo', this.titulo);
+            formData.append('descricao', this.descricao.replaceAll('\n',' '));
+            formData.append('ingredientes', this.select);
+            formData.append('idUser', idUser);
+
             var x = (new Date()).getTimezoneOffset() * 60000; 
             var localISOTime = (new Date(Date.now() - x)).toISOString().slice(0,-1);  
-            json['data']= localISOTime.slice(0, 19).replace('T', ' ')
+            formData.append('data', localISOTime.slice(0, 19).replace('T', ' '));
+    
+            formData.append('file', this.img, this.img.name);
+            
             axios({
                 method: "post",
                 url: "http://localhost:7700/receita/",
-                data: json,
-                headers: { "Authorization" : token},
+                data: formData,
+                headers: { "Authorization" : token, 'Content-Type': 'multipart/form-data'},
             })
             .then(data => {
                 console.log(data.data)
