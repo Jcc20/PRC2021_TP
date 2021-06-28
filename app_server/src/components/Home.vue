@@ -10,7 +10,7 @@
                 <v-card class="pa-6 pub" outlined  @click="handleClick('/receitas/'+n.rec_id)">
                   <v-row>
                     <v-col cols="12" sm="4" style="display:inline-flex">
-                        <v-img v-if="n.imgPath" :src="'http://localhost:7700/uploads/'+n.imgPath"></v-img>
+                        <v-img v-if="n.imgPath" :src="'http://localhost:7700/uploads/'+n.imgPath" max-width="160" height="150"></v-img>
                         <v-img v-else src="../../public/default.png"></v-img>
                     </v-col>
                     <v-col cols="12" sm="8">
@@ -41,7 +41,7 @@
                 <v-card class="pa-6 rec" @click="handleClick('/publicacoes')">
                   <v-row>
                     <v-col cols="12" sm="4" style="display:inline-flex">
-                        <v-img v-if="n.imgPath" :src="'http://localhost:7700/uploads/'+n.imgPath"></v-img>
+                        <v-img v-if="n.imgPath" :src="'http://localhost:7700/uploads/'+n.imgPath" max-width="160" height="150"></v-img>
                         <v-img v-else src="../../public/default.png"></v-img>
                     </v-col>
                     <v-col cols="12" sm="8">
