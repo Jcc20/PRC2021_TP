@@ -12,7 +12,6 @@ exports.execQuery = async function (query){
     var getLink = "http://localhost:7200/repositories/PRC2021_Tp?query="
     var encoded = encodeURIComponent(prefixes + query)
     var result = await axios.get(getLink + encoded)
-    console.log(result.data)
     return result.data
 }
 
