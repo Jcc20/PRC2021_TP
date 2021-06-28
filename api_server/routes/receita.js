@@ -20,7 +20,8 @@ function verifyToken(token){
 
 
 router.get('/', async function(req, res, next) {
-    var query = `select ?img ?s ?d ?da ?di ?tc ?tp ?n (GROUP_CONCAT(distinct ?ig;SEPARATOR="&") AS ?igs) ?t (GROUP_CONCAT(distinct ?g;SEPARATOR="&") AS ?gs) where {  ?s rdf:type :Receita.
+    var query = `select ?img ?s ?d ?da ?di ?tc ?tp ?n (GROUP_CONCAT(distinct ?ig;SEPARATOR="&") AS ?igs) ?t (GROUP_CONCAT(distinct ?g;SEPARATOR="&") AS ?gs) where { 
+        ?s rdf:type :Receita.
         ?s :descricao ?d.
         ?s :data ?da.
         ?s :dificuldade ?di.
@@ -175,7 +176,9 @@ router.get('/tiposPrato', async function(req, res, next) {
 
 
 router.get('/autores', async function(req, res, next) {
-    var query = `select distinct ?n where{ ?s :Criou ?p. 
+    var query = `select distinct ?n where{ 
+        ?p rdf:type :Receita.
+        ?s :Criou ?p. 
         ?s :nome ?n.}`
     var result =await gdb.execQuery(query)
    

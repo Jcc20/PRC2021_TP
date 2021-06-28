@@ -44,7 +44,7 @@
             <v-card class="pa-6 rec">
               <v-row>
                 <v-col cols="12" sm="4" style="display:inline-flex">
-                    <v-img v-if="n.imgPath" :src="'http://localhost:7700/uploads/'+n.imgPath" max-width="500" height="300"></v-img>
+                    <v-img v-if="n.imgPath" :src="'http://localhost:7700/uploads/'+n.imgPath" max-width=100% height="300"></v-img>
                     <v-img v-else src="../../public/default.png"></v-img>
                 </v-col>
                 <v-col cols="12" sm="8">

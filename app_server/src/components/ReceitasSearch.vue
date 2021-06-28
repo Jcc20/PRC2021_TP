@@ -23,19 +23,19 @@
                 </v-col>
 
                 <v-col class="d-flex pa-2" cols="12" sm="2">
-                    <v-select
+                    <v-autocomplete
                       :items="tiposCozinha"
-                      v-model="tipoCozinha"
-                      label="Tipo de cozinha"
-                      dense
-                      outlined
-                      hide-details
-                      clearable
-                    ></v-select>
+                        v-model="tipoCozinha"
+                        label="Tipo de cozinha"
+                        dense
+                        outlined
+                        hide-details
+                        clearable
+                    ></v-autocomplete>
                 </v-col>
 
                 <v-col class="d-flex pa-2" cols="12" sm="2">
-                    <v-select
+                    <v-autocomplete
                       :items="tiposPrato"
                       v-model="tipoPrato"
                       label="Tipo de prato"
@@ -43,11 +43,11 @@
                       clearable
                       hide-details
                       outlined
-                    ></v-select>
+                    ></v-autocomplete>
                 </v-col>
 
                 <v-col class="d-flex pa-2" cols="12" sm="2">
-                    <v-select
+                    <v-autocomplete
                       :items="chefs"
                       v-model="chef"
                       label="Chef"
@@ -55,7 +55,7 @@
                       outlined
                       hide-details
                       clearable
-                    ></v-select>
+                     ></v-autocomplete>  
                 </v-col>
 
                 <v-col class="d-flex pa-2" cols="12" sm="1">
@@ -80,7 +80,7 @@
                           <v-card class="pa-6 pub" outlined  @click="handleClick('/receitas/'+n.rec_id)">
                             <v-row>
                               <v-col cols="12" sm="5" style="display:inline-flex">
-                                  <v-img v-if="n.imgPath" :src="'http://localhost:7700/uploads/'+n.imgPath" width="400" height="200"></v-img>
+                                  <v-img v-if="n.imgPath" :src="'http://localhost:7700/uploads/'+n.imgPath" width=100% height="200"></v-img>
                                   <v-img v-else src="../../public/default.png"></v-img>
                               </v-col>
                               <v-row class="pa-2" align="end">

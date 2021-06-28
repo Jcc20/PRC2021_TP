@@ -9,11 +9,11 @@
               <v-col v-for="n in list" :key="n.id" cols="12" sm="6">
                 <v-card class="pa-6 pub" outlined  @click="handleClick('/receitas/'+n.rec_id)">
                   <v-row>
-                    <v-col cols="12" sm="4" style="display:inline-flex">
-                        <v-img v-if="n.imgPath" :src="'http://localhost:7700/uploads/'+n.imgPath" max-width="160" height="150"></v-img>
+                    <v-col cols="12" sm="6" style="display:inline-flex">
+                        <v-img v-if="n.imgPath" :src="'http://localhost:7700/uploads/'+n.imgPath" max-width=100% height="150"></v-img>
                         <v-img v-else src="../../public/default.png"></v-img>
                     </v-col>
-                    <v-col cols="12" sm="8">
+                    <v-col cols="12" sm="6">
                         <span style="font-size: 20px; color: #53a6bf;"> {{ n.titulo }} <br/> </span>  
                         <span > <b>Autor: </b>{{ n.autor }} <br/></span>
                         <span > <b>Dificuldade: </b>
@@ -41,7 +41,7 @@
                 <v-card class="pa-6 rec" @click="handleClick('/publicacoes')">
                   <v-row>
                     <v-col cols="12" sm="4" style="display:inline-flex">
-                        <v-img v-if="n.imgPath" :src="'http://localhost:7700/uploads/'+n.imgPath" max-width="160" height="150"></v-img>
+                        <v-img v-if="n.imgPath" :src="'http://localhost:7700/uploads/'+n.imgPath" max-width=100% height="150"></v-img>
                         <v-img v-else src="../../public/default.png"></v-img>
                     </v-col>
                     <v-col cols="12" sm="8">
